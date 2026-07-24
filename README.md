@@ -4,14 +4,12 @@ Marketing site for H-VIEW — a stick-on ESP32 + accelerometer/gyro sensor that 
 
 Static site (HTML/CSS/JS), no build step, no framework — deploys on Vercel as-is.
 
-## Before going live
+## Status
 
-The request form still posts to a placeholder Formspree endpoint. To make it actually deliver submissions:
+- Request form posts to a live Formspree endpoint (`xnjegzyp`).
+- Contact email (aarush.pendum@gmail.com) is wired in.
 
-1. Create a free form at [formspree.io](https://formspree.io).
-2. In `index.html`, find `action="https://formspree.io/f/YOUR_FORM_ID"` on the `<form id="requestForm">` and replace `YOUR_FORM_ID` with your real form ID.
-
-Contact email (aarush.pendum@gmail.com) is already wired in.
+Formspree requires confirming the first real submission via the email sent to the account owner — do that once after going live so future submissions deliver automatically.
 
 ## Local preview
 
