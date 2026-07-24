@@ -358,6 +358,14 @@ header.nav {
 }
 .team-name { font-size: 16px; font-weight: 700; color: var(--grey-900); margin-bottom: 4px; }
 .team-title { font-size: 13.5px; color: var(--grey-500); }
+.team-founder {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--grey-300);
+  margin-top: 8px;
+}
 
 /* ---------- Pilot ---------- */
 .pilot-wrap {
