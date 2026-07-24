@@ -364,7 +364,10 @@ header.nav {
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--grey-300);
-  margin-top: 8px;
+  margin-bottom: 4px;
+}
+.avatar-glow {
+  box-shadow: 0 0 0 6px rgba(106,99,224,0.16), 0 0 22px 4px rgba(106,99,224,0.35);
 }
 
 /* ---------- Pilot ---------- */
