@@ -75,7 +75,7 @@ if (form) {
     } catch (err) {
       submitBtn.textContent = originalText;
       submitBtn.disabled = false;
-      alert("Something went wrong sending your request — please email us directly at hello@h-view.com instead.");
+      alert("Something went wrong sending your request — please email us directly at aarush.pendum@gmail.com instead.");
     }
   });
 }

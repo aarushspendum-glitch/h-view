@@ -6,11 +6,12 @@ Static site (HTML/CSS/JS), no build step, no framework — deploys on Vercel as-
 
 ## Before going live
 
-The request form currently posts to a placeholder Formspree endpoint. To make it actually deliver submissions:
+The request form still posts to a placeholder Formspree endpoint. To make it actually deliver submissions:
 
-1. Create a free form at [formspree.io](https://formspree.io) (or any form backend of your choice).
+1. Create a free form at [formspree.io](https://formspree.io).
 2. In `index.html`, find `action="https://formspree.io/f/YOUR_FORM_ID"` on the `<form id="requestForm">` and replace `YOUR_FORM_ID` with your real form ID.
-3. Swap the placeholder email `hello@h-view.com` (in `index.html`) for the real contact address.
+
+Contact email (aarush.pendum@gmail.com) is already wired in.
 
 ## Local preview
 
