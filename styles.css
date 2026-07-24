@@ -3,20 +3,23 @@
 
 :root {
   --white: #ffffff;
-  --grey-50: #fafafa;
+  --cream: #f6f3ed;
+  --grey-50: #f5f2eb;
   --grey-100: #f4f4f5;
   --grey-200: #e4e4e7;
   --grey-300: #d4d4d8;
-  --grey-500: #71717a;
+  --grey-500: #7c7488;
   --grey-600: #52525b;
-  --grey-700: #3f3f46;
-  --grey-900: #18181b;
+  --grey-700: #453d56;
+  --grey-900: #241c3f;
 
-  --blue: #38bdf8;
-  --blue-dark: #0ea5e9;
-  --blue-darker: #0284c7;
-  --blue-tint: #e0f2fe;
-  --blue-tint-soft: #f0f9ff;
+  --blue: #6a63e0;
+  --blue-dark: #554cc9;
+  --blue-darker: #3c34a3;
+  --blue-tint: #ecebfc;
+  --blue-tint-soft: #f5f4fd;
+
+  --font-display: "Playfair Display", Georgia, serif;
 
   --radius: 14px;
   --radius-sm: 8px;
@@ -30,7 +33,7 @@ html { scroll-behavior: smooth; }
 body {
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--grey-700);
-  background: var(--white);
+  background: var(--cream);
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
 }
@@ -45,8 +48,9 @@ img, svg { display: block; max-width: 100%; }
 
 h1, h2, h3, h4 {
   color: var(--grey-900);
+  font-family: var(--font-display);
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 
 .container {
@@ -99,9 +103,9 @@ section.alt { background: var(--grey-50); }
 .btn-primary {
   background: var(--blue);
   color: var(--white);
-  box-shadow: 0 1px 2px rgba(2,132,199,0.1), 0 6px 16px rgba(56,189,248,0.35);
+  box-shadow: 0 1px 2px rgba(60,52,163,0.1), 0 6px 16px rgba(106,99,224,0.35);
 }
-.btn-primary:hover { background: var(--blue-dark); box-shadow: 0 6px 20px rgba(56,189,248,0.45); }
+.btn-primary:hover { background: var(--blue-dark); box-shadow: 0 6px 20px rgba(106,99,224,0.45); }
 
 .btn-ghost {
   background: var(--white);
@@ -131,10 +135,11 @@ header.nav {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-weight: 800;
-  font-size: 19px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
   color: var(--grey-900);
-  letter-spacing: -0.01em;
+  letter-spacing: 0.02em;
 }
 .brand .mark { color: var(--blue); }
 
@@ -197,14 +202,14 @@ header.nav {
 .dot-pulse {
   width: 8px; height: 8px; border-radius: 50%;
   background: var(--blue);
-  box-shadow: 0 0 0 0 rgba(56,189,248,0.6);
+  box-shadow: 0 0 0 0 rgba(106,99,224,0.6);
   animation: pulse 2s infinite;
   flex-shrink: 0;
 }
 @keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(56,189,248,0.5); }
-  70% { box-shadow: 0 0 0 8px rgba(56,189,248,0); }
-  100% { box-shadow: 0 0 0 0 rgba(56,189,248,0); }
+  0% { box-shadow: 0 0 0 0 rgba(106,99,224,0.5); }
+  70% { box-shadow: 0 0 0 8px rgba(106,99,224,0); }
+  100% { box-shadow: 0 0 0 0 rgba(106,99,224,0); }
 }
 
 /* Dashboard mock card */
@@ -320,7 +325,7 @@ header.nav {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(400px 240px at 30% 20%, rgba(56,189,248,0.25), transparent 60%);
+  background: radial-gradient(400px 240px at 30% 20%, rgba(106,99,224,0.25), transparent 60%);
 }
 .rtu-visual svg { position: relative; z-index: 1; }
 
@@ -417,7 +422,7 @@ form.request-form {
 .field textarea:focus {
   outline: none;
   border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(56,189,248,0.15);
+  box-shadow: 0 0 0 3px rgba(106,99,224,0.15);
 }
 .field textarea { resize: vertical; min-height: 96px; }
 .field .hint { font-size: 12.5px; color: var(--grey-500); margin-top: 6px; }
@@ -456,7 +461,8 @@ footer {
   flex-wrap: wrap;
   gap: 20px;
 }
-.footer-brand { display: flex; align-items: center; gap: 10px; font-weight: 800; color: var(--grey-900); }
+.footer-brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 700; font-size: 19px; letter-spacing: 0.02em; color: var(--grey-900); }
+.est-line { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; color: var(--grey-500); margin-top: 10px; }
 .footer-brand .mark { color: var(--blue); }
 footer .tagline { font-size: 13.5px; color: var(--grey-500); margin-top: 6px; }
 footer .footer-links { display: flex; gap: 28px; }
