@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="H-VIEW" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="theme-color" content="#f6f3ed" />
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><rect width=%2224%22 height=%2224%22 rx=%226%22 fill=%22%236a63e0%22/><rect x=%229%22 y=%229%22 width=%226%22 height=%226%22 rx=%221%22 fill=%22none%22 stroke=%22white%22 stroke-width=%221.6%22/><path d=%22M11 9V6M13 9V6M11 15v3M13 15v3%22 stroke=%22white%22 stroke-width=%221.6%22 stroke-linecap=%22round%22/></svg>" />
+<link rel="icon" type="image/png" href="/assets/favicon.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
@@ -44,7 +44,7 @@
     align-items: center;
     justify-content: space-between;
   }
-  .brand { display: flex; align-items: center; gap: 10px; font-family: "Playfair Display", serif; font-weight: 700; font-size: 19px; color: var(--grey-900); }
+  .brand { display: flex; align-items: center; }
   .nav-right { display: flex; align-items: center; gap: 16px; }
   .user-name { font-size: 14px; font-weight: 600; color: var(--grey-700); }
   .btn-signout {
@@ -124,7 +124,7 @@
 <body>
 
 <nav>
-  <div class="brand">H-VIEW</div>
+  <div class="brand"><img src="assets/logo-lockup.png" alt="H-VIEW" style="height:26px; width:auto; display:block;" /></div>
   <div class="nav-right">
     <span class="user-name" id="userName"></span>
     <button class="btn-signout" id="signOutBtn">Sign out</button>

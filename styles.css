@@ -134,14 +134,8 @@ header.nav {
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 20px;
-  color: var(--grey-900);
-  letter-spacing: 0.02em;
 }
-.brand .mark { color: var(--blue); }
+.brand-logo { height: 36px; width: auto; display: block; }
 
 .nav-links {
   display: flex;
@@ -502,9 +496,9 @@ footer {
   flex-wrap: wrap;
   gap: 20px;
 }
-.footer-brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 700; font-size: 19px; letter-spacing: 0.02em; color: var(--grey-900); }
+.footer-brand { display: flex; align-items: center; }
+.footer-logo { height: 30px; width: auto; display: block; }
 .est-line { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; color: var(--grey-500); margin-top: 10px; }
-.footer-brand .mark { color: var(--blue); }
 footer .tagline { font-size: 13.5px; color: var(--grey-500); margin-top: 6px; }
 footer .footer-links { display: flex; gap: 28px; }
 footer .footer-links a { font-size: 13.5px; color: var(--grey-500); }
