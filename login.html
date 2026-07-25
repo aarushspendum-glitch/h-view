@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sign in — H-VIEW</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><rect width=%2224%22 height=%2224%22 rx=%226%22 fill=%22%236a63e0%22/><rect x=%229%22 y=%229%22 width=%226%22 height=%226%22 rx=%221%22 fill=%22none%22 stroke=%22white%22 stroke-width=%221.6%22/><path d=%22M11 9V6M13 9V6M11 15v3M13 15v3%22 stroke=%22white%22 stroke-width=%221.6%22 stroke-linecap=%22round%22/><circle cx=%225%22 cy=%225%22 r=%221%22 fill=%22white%22/><circle cx=%2219%22 cy=%225%22 r=%221%22 fill=%22white%22/><circle cx=%225%22 cy=%2219%22 r=%221%22 fill=%22white%22/><circle cx=%2219%22 cy=%2219%22 r=%221%22 fill=%22white%22/></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --white: #ffffff;
+    --cream: #f6f3ed;
+    --grey-200: #e4e4e7;
+    --grey-300: #d4d4d8;
+    --grey-500: #7c7488;
+    --grey-700: #453d56;
+    --grey-900: #241c3f;
+    --blue: #6a63e0;
+    --blue-dark: #554cc9;
+    --blue-tint: #ecebfc;
+    --red: #c81e1e;
+    --red-tint: #fdecec;
+  }
+  body {
+    font-family: "Inter", sans-serif;
+    background: var(--cream);
+    color: var(--grey-700);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .card {
+    background: var(--white);
+    border: 1px solid var(--grey-200);
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(24,24,27,0.05), 0 16px 40px rgba(24,24,27,0.08);
+    padding: 40px;
+    width: 100%;
+    max-width: 400px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: "Playfair Display", serif; font-weight: 700; font-size: 22px; color: var(--grey-900); letter-spacing: 0.02em; margin-bottom: 6px; }
+  .tagline { font-size: 13.5px; color: var(--grey-500); margin-bottom: 32px; }
+  label { display: block; font-size: 13px; font-weight: 600; color: var(--grey-700); margin-bottom: 6px; }
+  .field { margin-bottom: 18px; }
+  input {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1px solid var(--grey-300);
+    border-radius: 8px;
+    font-size: 14.5px;
+    font-family: inherit;
+    color: var(--grey-900);
+  }
+  input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(106,99,224,0.15); }
+  button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: var(--blue);
+    color: white;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    font-family: inherit;
+    margin-top: 6px;
+  }
+  button:hover { background: var(--blue-dark); }
+  button:disabled { opacity: 0.6; cursor: default; }
+  .error {
+    display: none;
+    background: var(--red-tint);
+    color: var(--red);
+    font-size: 13.5px;
+    font-weight: 500;
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 18px;
+  }
+  .error.show { display: block; }
+  footer { text-align: center; font-size: 12.5px; color: var(--grey-500); margin-top: 24px; }
+</style>
+</head>
+<body>
+
+<div>
+  <div class="card">
+    <div class="brand">
+      <svg width="26" height="31" viewBox="0 0 100 120" fill="none">
+        <rect x="20" y="15" width="60" height="60" rx="4" stroke="#6a63e0" stroke-width="2.2"/>
+        <rect x="42" y="37" width="16" height="16" rx="1.5" stroke="#6a63e0" stroke-width="2.2"/>
+        <path d="M44,15V4M50,15V4M56,15V4" stroke="#6a63e0" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="44" cy="15" r="1.6" fill="#6a63e0"/>
+        <circle cx="50" cy="15" r="1.6" fill="#6a63e0"/>
+        <circle cx="56" cy="15" r="1.6" fill="#6a63e0"/>
+        <circle cx="28" cy="23" r="2.8" stroke="#6a63e0" stroke-width="1.6"/>
+        <circle cx="72" cy="23" r="2.8" stroke="#6a63e0" stroke-width="1.6"/>
+        <circle cx="28" cy="67" r="2.8" stroke="#6a63e0" stroke-width="1.6"/>
+        <circle cx="72" cy="67" r="2.8" stroke="#6a63e0" stroke-width="1.6"/>
+      </svg>
+      H-VIEW
+    </div>
+    <div class="tagline">Device health monitoring platform</div>
+
+    <div class="error" id="error"></div>
+
+    <form id="loginForm">
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required autocomplete="username" />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required autocomplete="current-password" />
+      </div>
+      <button type="submit" id="submitBtn">Sign in</button>
+    </form>
+  </div>
+  <footer>H-VIEW &middot; Predictive Maintenance</footer>
+</div>
+
+<script>
+  const form = document.getElementById('loginForm');
+  const errorBox = document.getElementById('error');
+  const submitBtn = document.getElementById('submitBtn');
+
+  function redirectFor(role) {
+    window.location.href = role === 'admin' ? '/admin' : '/dashboard';
+  }
+
+  fetch('/api/me').then(r => {
+    if (r.ok) return r.json();
+    return null;
+  }).then(data => {
+    if (data && data.role) redirectFor(data.role);
+  }).catch(() => {});
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorBox.classList.remove('show');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Signing in...';
+
+    try {
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: document.getElementById('email').value,
+          password: document.getElementById('password').value,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Login failed');
+      redirectFor(data.role);
+    } catch (err) {
+      errorBox.textContent = err.message;
+      errorBox.classList.add('show');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Sign in';
+    }
+  });
+</script>
+</body>
+</html>

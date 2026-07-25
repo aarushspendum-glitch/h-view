@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin — H-VIEW</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><rect width=%2224%22 height=%2224%22 rx=%226%22 fill=%22%236a63e0%22/><rect x=%229%22 y=%229%22 width=%226%22 height=%226%22 rx=%221%22 fill=%22none%22 stroke=%22white%22 stroke-width=%221.6%22/><path d=%22M11 9V6M13 9V6M11 15v3M13 15v3%22 stroke=%22white%22 stroke-width=%221.6%22 stroke-linecap=%22round%22/></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --white: #ffffff;
+    --cream: #f6f3ed;
+    --grey-50: #f5f2eb;
+    --grey-200: #e4e4e7;
+    --grey-300: #d4d4d8;
+    --grey-500: #7c7488;
+    --grey-700: #453d56;
+    --grey-900: #241c3f;
+    --blue: #6a63e0;
+    --blue-dark: #554cc9;
+    --blue-tint: #ecebfc;
+    --green: #057a55;
+    --green-tint: #e7f7f0;
+    --amber: #b45309;
+    --amber-tint: #fef3e2;
+    --red: #c81e1e;
+    --red-tint: #fdecec;
+  }
+  body { font-family: "Inter", sans-serif; background: var(--cream); color: var(--grey-700); min-height: 100vh; }
+
+  nav { background: var(--white); border-bottom: 1px solid var(--grey-200); padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-left { display: flex; align-items: center; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: "Playfair Display", serif; font-weight: 700; font-size: 19px; color: var(--grey-900); }
+  .admin-badge { background: var(--blue-tint); color: var(--blue-dark); font-size: 11.5px; font-weight: 700; padding: 4px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .btn-signout { padding: 8px 16px; border: 1px solid var(--grey-300); border-radius: 8px; background: var(--white); color: var(--grey-700); font-size: 13.5px; font-weight: 600; cursor: pointer; font-family: inherit; }
+  .btn-signout:hover { background: var(--grey-50); }
+
+  main { max-width: 1100px; margin: 0 auto; padding: 32px 24px 64px; }
+
+  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+  .stat-card { background: var(--white); border: 1px solid var(--grey-200); border-radius: 12px; padding: 18px 20px; }
+  .stat-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--grey-500); font-weight: 600; margin-bottom: 8px; }
+  .stat-value { font-size: 30px; font-weight: 800; }
+  .stat-value.blue { color: var(--blue); }
+  .stat-value.green { color: var(--green); }
+  .stat-value.amber { color: var(--amber); }
+  .stat-value.red { color: var(--red); }
+
+  .section-title { font-size: 16px; font-weight: 700; color: var(--grey-900); margin: 0 0 14px; }
+
+  .device-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; margin-bottom: 40px; }
+  .device-card { background: var(--white); border: 1px solid var(--grey-200); border-left: 6px solid var(--grey-300); border-radius: 12px; padding: 18px 20px; }
+  .device-card.normal { border-left-color: var(--green); }
+  .device-card.warning { border-left-color: var(--amber); }
+  .device-card.critical { border-left-color: var(--red); }
+  .device-id { font-size: 13px; font-weight: 700; color: var(--grey-500); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }
+  .device-status { font-size: 22px; font-weight: 800; color: var(--grey-900); margin-bottom: 14px; }
+  .device-status.normal { color: var(--green); }
+  .device-status.warning { color: var(--amber); }
+  .device-status.critical { color: var(--red); }
+  .mini-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
+  .mini-box { background: var(--grey-50); border-radius: 8px; padding: 8px 10px; }
+  .mini-label { font-size: 10.5px; text-transform: uppercase; color: var(--grey-500); font-weight: 600; margin-bottom: 3px; }
+  .mini-value { font-size: 14px; font-weight: 700; color: var(--grey-900); }
+  .device-time { font-size: 12px; color: var(--grey-500); }
+
+  .forms-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .panel { background: var(--white); border: 1px solid var(--grey-200); border-radius: 12px; padding: 22px; }
+  .panel h3 { font-size: 14.5px; font-weight: 700; color: var(--grey-900); margin-bottom: 16px; }
+  .field { margin-bottom: 14px; }
+  label { display: block; font-size: 12.5px; font-weight: 600; color: var(--grey-700); margin-bottom: 5px; }
+  input {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--grey-300); border-radius: 8px;
+    font-size: 14px; font-family: inherit; color: var(--grey-900);
+  }
+  input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(106,99,224,0.15); }
+  button.primary {
+    width: 100%; padding: 11px; border: none; border-radius: 8px; background: var(--blue);
+    color: white; font-weight: 600; font-size: 14.5px; cursor: pointer; font-family: inherit; margin-top: 4px;
+  }
+  button.primary:hover { background: var(--blue-dark); }
+  .form-msg { font-size: 12.5px; margin-top: 10px; display: none; }
+  .form-msg.success { color: var(--green); display: block; }
+  .form-msg.error { color: var(--red); display: block; }
+  .empty { color: var(--grey-500); font-size: 13.5px; grid-column: 1 / -1; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <div class="brand">H-VIEW</div>
+    <span class="admin-badge">Admin</span>
+  </div>
+  <button class="btn-signout" id="signOutBtn">Sign out</button>
+</nav>
+
+<main>
+  <div class="stat-row">
+    <div class="stat-card"><div class="stat-label">Total devices</div><div class="stat-value blue" id="statTotal">0</div></div>
+    <div class="stat-card"><div class="stat-label">Normal</div><div class="stat-value green" id="statNormal">0</div></div>
+    <div class="stat-card"><div class="stat-label">Warning</div><div class="stat-value amber" id="statWarning">0</div></div>
+    <div class="stat-card"><div class="stat-label">Critical</div><div class="stat-value red" id="statCritical">0</div></div>
+  </div>
+
+  <div class="section-title">Devices</div>
+  <div class="device-grid" id="deviceGrid">
+    <div class="empty">No devices reporting yet.</div>
+  </div>
+
+  <div class="forms-row">
+    <div class="panel">
+      <h3>Add client</h3>
+      <form id="clientForm">
+        <div class="field"><label>Name</label><input type="text" id="clientName" required /></div>
+        <div class="field"><label>Email</label><input type="email" id="clientEmail" required /></div>
+        <div class="field"><label>Password</label><input type="password" id="clientPassword" required /></div>
+        <button type="submit" class="primary">Add client</button>
+        <div class="form-msg" id="clientMsg"></div>
+      </form>
+    </div>
+    <div class="panel">
+      <h3>Assign device</h3>
+      <form id="assignForm">
+        <div class="field"><label>Device ID</label><input type="text" id="assignDeviceId" placeholder="DEVICE_001" required /></div>
+        <div class="field"><label>Client email</label><input type="email" id="assignEmail" required /></div>
+        <button type="submit" class="primary">Assign device</button>
+        <div class="form-msg" id="assignMsg"></div>
+      </form>
+    </div>
+  </div>
+</main>
+
+<script>
+  const deviceGrid = document.getElementById('deviceGrid');
+  let polling = false;
+
+  function statusClass(status) {
+    if (status === 'NORMAL') return 'normal';
+    if (status === 'WARNING') return 'warning';
+    if (status === 'CRITICAL') return 'critical';
+    return '';
+  }
+
+  async function poll() {
+    if (polling) return;
+    polling = true;
+    try {
+      const res = await fetch('/api/latest');
+      if (res.status === 401) { window.location.href = '/login'; return; }
+      const data = await res.json();
+      const deviceIds = Object.keys(data).filter(k => k !== 'status');
+
+      let normal = 0, warning = 0, critical = 0;
+      deviceGrid.innerHTML = '';
+
+      if (deviceIds.length === 0) {
+        deviceGrid.innerHTML = '<div class="empty">No devices reporting yet.</div>';
+      } else {
+        deviceIds.forEach(id => {
+          const r = data[id];
+          const cls = statusClass(r.status);
+          if (cls === 'normal') normal++;
+          else if (cls === 'warning') warning++;
+          else if (cls === 'critical') critical++;
+
+          const card = document.createElement('div');
+          card.className = `device-card ${cls}`;
+          card.innerHTML = `
+            <div class="device-id">${id}</div>
+            <div class="device-status ${cls}">${r.status || '—'}</div>
+            <div class="mini-row">
+              <div class="mini-box"><div class="mini-label">Accel</div><div class="mini-value">${r.accel !== undefined ? r.accel.toFixed(2) : '—'}</div></div>
+              <div class="mini-box"><div class="mini-label">Gyro</div><div class="mini-value">${r.gyro !== undefined ? r.gyro.toFixed(2) : '—'}</div></div>
+              <div class="mini-box"><div class="mini-label">Temp</div><div class="mini-value">${r.temp !== undefined ? r.temp.toFixed(1) : '—'}&deg;F</div></div>
+            </div>
+            <div class="device-time">${r.receivedAt ? 'Updated ' + new Date(r.receivedAt).toLocaleTimeString() : ''}</div>
+          `;
+          deviceGrid.appendChild(card);
+        });
+      }
+
+      document.getElementById('statTotal').textContent = deviceIds.length;
+      document.getElementById('statNormal').textContent = normal;
+      document.getElementById('statWarning').textContent = warning;
+      document.getElementById('statCritical').textContent = critical;
+    } catch (err) {
+      console.error(err);
+    } finally {
+      polling = false;
+    }
+  }
+
+  function showMsg(el, text, isError) {
+    el.textContent = text;
+    el.className = `form-msg ${isError ? 'error' : 'success'}`;
+  }
+
+  document.getElementById('clientForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById('clientMsg');
+    const secret = prompt('Admin secret:');
+    if (!secret) return;
+    try {
+      const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: document.getElementById('clientName').value,
+          email: document.getElementById('clientEmail').value,
+          password: document.getElementById('clientPassword').value,
+          role: 'client',
+          secret,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to add client');
+      showMsg(msg, `Client "${data.user.name}" added.`, false);
+      e.target.reset();
+    } catch (err) {
+      showMsg(msg, err.message, true);
+    }
+  });
+
+  document.getElementById('assignForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById('assignMsg');
+    const secret = prompt('Admin secret:');
+    if (!secret) return;
+    try {
+      const res = await fetch('/api/assign-device', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          deviceId: document.getElementById('assignDeviceId').value,
+          userEmail: document.getElementById('assignEmail').value,
+          secret,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to assign device');
+      showMsg(msg, 'Device assigned.', false);
+      e.target.reset();
+    } catch (err) {
+      showMsg(msg, err.message, true);
+    }
+  });
+
+  document.getElementById('signOutBtn').addEventListener('click', async () => {
+    await fetch('/api/logout', { method: 'POST' });
+    window.location.href = '/login';
+  });
+
+  (async function init() {
+    try {
+      const res = await fetch('/api/me');
+      if (!res.ok) { window.location.href = '/login'; return; }
+      const me = await res.json();
+      if (me.role !== 'admin') { window.location.href = '/dashboard'; return; }
+    } catch (err) {
+      window.location.href = '/login';
+      return;
+    }
+    poll();
+    setInterval(poll, 1000);
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard — H-VIEW</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><rect width=%2224%22 height=%2224%22 rx=%226%22 fill=%22%236a63e0%22/><rect x=%229%22 y=%229%22 width=%226%22 height=%226%22 rx=%221%22 fill=%22none%22 stroke=%22white%22 stroke-width=%221.6%22/><path d=%22M11 9V6M13 9V6M11 15v3M13 15v3%22 stroke=%22white%22 stroke-width=%221.6%22 stroke-linecap=%22round%22/></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --white: #ffffff;
+    --cream: #f6f3ed;
+    --grey-50: #f5f2eb;
+    --grey-200: #e4e4e7;
+    --grey-300: #d4d4d8;
+    --grey-500: #7c7488;
+    --grey-700: #453d56;
+    --grey-900: #241c3f;
+    --blue: #6a63e0;
+    --blue-dark: #554cc9;
+    --blue-tint: #ecebfc;
+    --green: #057a55;
+    --green-tint: #e7f7f0;
+    --amber: #b45309;
+    --amber-tint: #fef3e2;
+    --red: #c81e1e;
+    --red-tint: #fdecec;
+  }
+  body { font-family: "Inter", sans-serif; background: var(--cream); color: var(--grey-700); min-height: 100vh; }
+  .mono { font-family: "JetBrains Mono", monospace; }
+
+  nav {
+    background: var(--white);
+    border-bottom: 1px solid var(--grey-200);
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: "Playfair Display", serif; font-weight: 700; font-size: 19px; color: var(--grey-900); }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+  .user-name { font-size: 14px; font-weight: 600; color: var(--grey-700); }
+  .btn-signout {
+    padding: 8px 16px;
+    border: 1px solid var(--grey-300);
+    border-radius: 8px;
+    background: var(--white);
+    color: var(--grey-700);
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-signout:hover { background: var(--grey-50); }
+
+  main { max-width: 1000px; margin: 0 auto; padding: 32px 24px 64px; }
+
+  .status-banner {
+    background: var(--white);
+    border: 1px solid var(--grey-200);
+    border-left: 6px solid var(--grey-300);
+    border-radius: 12px;
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .status-banner.normal { border-left-color: var(--green); }
+  .status-banner.warning { border-left-color: var(--amber); }
+  .status-banner.critical { border-left-color: var(--red); }
+  .status-left { display: flex; align-items: center; gap: 12px; }
+  .status-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--grey-300); flex-shrink: 0; }
+  .status-dot.normal { background: var(--green); animation: pulse 2s infinite; }
+  .status-dot.warning { background: var(--amber); animation: pulse 2s infinite; }
+  .status-dot.critical { background: var(--red); animation: pulse 1s infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0,0,0,0.25); } 70% { box-shadow: 0 0 0 8px rgba(0,0,0,0); } 100% { box-shadow: 0 0 0 0 rgba(0,0,0,0); } }
+  .status-text { font-size: 26px; font-weight: 800; color: var(--grey-900); }
+  .status-text.normal { color: var(--green); }
+  .status-text.warning { color: var(--amber); }
+  .status-text.critical { color: var(--red); }
+  .status-right { text-align: right; }
+  .device-name { font-size: 14.5px; font-weight: 700; color: var(--grey-900); }
+  .last-update { font-size: 12.5px; color: var(--grey-500); margin-top: 4px; }
+
+  .metric-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+  .metric-card { background: var(--white); border: 1px solid var(--grey-200); border-radius: 12px; padding: 20px; }
+  .metric-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--grey-500); font-weight: 600; margin-bottom: 10px; }
+  .metric-value { font-size: 28px; font-weight: 700; color: var(--grey-900); }
+  .metric-unit { font-size: 14px; color: var(--grey-500); font-weight: 500; }
+  .metric-baseline { font-size: 12.5px; color: var(--grey-500); margin-top: 4px; }
+  .metric-pill { display: inline-block; font-size: 11.5px; font-weight: 700; padding: 3px 9px; border-radius: 999px; margin-top: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .metric-pill.normal { background: var(--green-tint); color: var(--green); }
+  .metric-pill.warning { background: var(--amber-tint); color: var(--amber); }
+  .metric-pill.critical { background: var(--red-tint); color: var(--red); }
+  .progress-track { height: 6px; border-radius: 999px; background: var(--grey-50); margin-top: 12px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 999px; background: var(--green); transition: width 0.4s ease; }
+  .progress-fill.warning { background: var(--amber); }
+  .progress-fill.critical { background: var(--red); }
+
+  .panel { background: var(--white); border: 1px solid var(--grey-200); border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; }
+  .panel-title { font-size: 14.5px; font-weight: 700; color: var(--grey-900); margin-bottom: 14px; }
+  canvas { width: 100%; height: 120px; display: block; }
+
+  .log-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .btn-clear { border: none; background: none; color: var(--blue); font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+  .log-list { max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+  .log-item { display: flex; align-items: baseline; gap: 10px; font-size: 13px; padding: 8px 10px; border-radius: 8px; background: var(--grey-50); }
+  .log-item .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .log-item .dot.normal { background: var(--green); }
+  .log-item .dot.warning { background: var(--amber); }
+  .log-item .dot.critical { background: var(--red); }
+  .log-time { color: var(--grey-500); font-size: 11.5px; }
+  .empty { color: var(--grey-500); font-size: 13.5px; padding: 8px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand">H-VIEW</div>
+  <div class="nav-right">
+    <span class="user-name" id="userName"></span>
+    <button class="btn-signout" id="signOutBtn">Sign out</button>
+  </div>
+</nav>
+
+<main>
+  <div class="status-banner" id="statusBanner">
+    <div class="status-left">
+      <span class="status-dot" id="statusDot"></span>
+      <span class="status-text" id="statusText">Waiting for data...</span>
+    </div>
+    <div class="status-right">
+      <div class="device-name" id="deviceName">—</div>
+      <div class="last-update" id="lastUpdate">No readings yet</div>
+    </div>
+  </div>
+
+  <div class="metric-row">
+    <div class="metric-card">
+      <div class="metric-label">Accel magnitude</div>
+      <div class="metric-value"><span id="accelValue">—</span> <span class="metric-unit">g</span></div>
+      <div class="metric-baseline" id="accelBaseline">Baseline not calibrated</div>
+      <span class="metric-pill normal" id="accelPill">—</span>
+      <div class="progress-track"><div class="progress-fill" id="accelBar" style="width:0%"></div></div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Gyro magnitude</div>
+      <div class="metric-value"><span id="gyroValue">—</span> <span class="metric-unit">&deg;/s</span></div>
+      <div class="metric-baseline" id="gyroBaseline">Baseline not calibrated</div>
+      <span class="metric-pill normal" id="gyroPill">—</span>
+      <div class="progress-track"><div class="progress-fill" id="gyroBar" style="width:0%"></div></div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Temperature</div>
+      <div class="metric-value"><span id="tempValue">—</span> <span class="metric-unit">&deg;F</span></div>
+      <div class="metric-baseline" id="readingCount">0 total readings</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Vibration history</div>
+    <canvas id="chart" width="900" height="120"></canvas>
+  </div>
+
+  <div class="panel">
+    <div class="log-header">
+      <div class="panel-title" style="margin-bottom:0;">Event log</div>
+      <button class="btn-clear" id="clearLogBtn">Clear</button>
+    </div>
+    <div class="log-list" id="logList">
+      <div class="empty">No events yet.</div>
+    </div>
+  </div>
+</main>
+
+<script>
+  const statusBanner = document.getElementById('statusBanner');
+  const statusDot = document.getElementById('statusDot');
+  const statusText = document.getElementById('statusText');
+  const deviceNameEl = document.getElementById('deviceName');
+  const lastUpdateEl = document.getElementById('lastUpdate');
+  const logList = document.getElementById('logList');
+  const canvas = document.getElementById('chart');
+  const ctx = canvas.getContext('2d');
+
+  let history = [];
+  let lastLoggedStatus = null;
+  let readingCount = 0;
+  let polling = false;
+
+  function statusClass(status) {
+    if (status === 'NORMAL') return 'normal';
+    if (status === 'WARNING') return 'warning';
+    if (status === 'CRITICAL') return 'critical';
+    return '';
+  }
+
+  function fmtSigma(sigma) {
+    if (sigma === null || sigma === undefined || isNaN(sigma)) return '';
+    return `${sigma.toFixed(1)}σ from baseline`;
+  }
+
+  function updateMetricCard(prefix, value, baseMean, baseStd, sigma, status, unit) {
+    const valueEl = document.getElementById(`${prefix}Value`);
+    const baselineEl = document.getElementById(`${prefix}Baseline`);
+    const pillEl = document.getElementById(`${prefix}Pill`);
+    const barEl = document.getElementById(`${prefix}Bar`);
+    const cls = statusClass(status);
+
+    valueEl.textContent = (value !== undefined && value !== null) ? value.toFixed(3) : '—';
+    if (baseMean !== undefined && baseMean !== null) {
+      baselineEl.textContent = `Baseline ${baseMean.toFixed(3)} ± ${(baseStd || 0).toFixed(3)} ${fmtSigma(sigma) ? '· ' + fmtSigma(sigma) : ''}`;
+    } else {
+      baselineEl.textContent = 'Baseline not calibrated';
+    }
+    pillEl.textContent = status || '—';
+    pillEl.className = `metric-pill ${cls}`;
+    const pct = Math.min(100, Math.abs(sigma || 0) * 25);
+    barEl.style.width = `${pct}%`;
+    barEl.className = `progress-fill ${cls}`;
+  }
+
+  function logEvent(status, message) {
+    const empty = logList.querySelector('.empty');
+    if (empty) empty.remove();
+    const item = document.createElement('div');
+    item.className = 'log-item';
+    const time = new Date().toLocaleTimeString();
+    item.innerHTML = `<span class="dot ${statusClass(status)}"></span><span>${message}</span><span class="log-time">${time}</span>`;
+    logList.prepend(item);
+  }
+
+  function drawChart() {
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    ctx.strokeStyle = '#f0eef8';
+    ctx.lineWidth = 1;
+    for (let i = 1; i < 4; i++) {
+      const y = (h / 4) * i;
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+    }
+    if (history.length < 2) return;
+
+    const drawLine = (key, color) => {
+      const values = history.map(p => p[key] || 0);
+      const max = Math.max(...values, 0.01);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      values.forEach((v, i) => {
+        const x = (i / (values.length - 1)) * w;
+        const y = h - (v / max) * (h - 10) - 5;
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+    };
+    drawLine('accel', '#6a63e0');
+    drawLine('gyro', '#7c3aed');
+  }
+
+  async function poll() {
+    if (polling) return;
+    polling = true;
+    try {
+      const res = await fetch('/api/latest');
+      if (res.status === 401) { window.location.href = '/login'; return; }
+      const data = await res.json();
+
+      if (data.status === 'WAITING' || !data.status) {
+        statusText.textContent = 'Waiting for data...';
+        statusBanner.className = 'status-banner';
+        statusDot.className = 'status-dot';
+        lastUpdateEl.textContent = 'No readings yet';
+      } else {
+        const cls = statusClass(data.status);
+        statusText.textContent = data.status;
+        statusText.className = `status-text ${cls}`;
+        statusBanner.className = `status-banner ${cls}`;
+        statusDot.className = `status-dot ${cls}`;
+        deviceNameEl.textContent = data.deviceName || '—';
+        lastUpdateEl.textContent = data.receivedAt ? `Updated ${new Date(data.receivedAt).toLocaleTimeString()}` : 'Just now';
+
+        updateMetricCard('accel', data.accel, data.accelBaseMean, data.accelBaseStd, data.accelSigma, data.status);
+        updateMetricCard('gyro', data.gyro, data.gyroBaseMean, data.gyroBaseStd, data.gyroSigma, data.status);
+        document.getElementById('tempValue').textContent = (data.temp !== undefined && data.temp !== null) ? data.temp.toFixed(1) : '—';
+        readingCount += 1;
+        document.getElementById('readingCount').textContent = `${readingCount} readings this session`;
+
+        history.push({ accel: data.accel, gyro: data.gyro });
+        if (history.length > 80) history.shift();
+        drawChart();
+
+        if (data.status !== lastLoggedStatus) {
+          logEvent(data.status, `Status changed to ${data.status}`);
+          lastLoggedStatus = data.status;
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      polling = false;
+    }
+  }
+
+  document.getElementById('clearLogBtn').addEventListener('click', () => {
+    logList.innerHTML = '<div class="empty">No events yet.</div>';
+  });
+
+  document.getElementById('signOutBtn').addEventListener('click', async () => {
+    await fetch('/api/logout', { method: 'POST' });
+    window.location.href = '/login';
+  });
+
+  (async function init() {
+    try {
+      const res = await fetch('/api/me');
+      if (!res.ok) { window.location.href = '/login'; return; }
+      const me = await res.json();
+      if (me.role === 'admin') { window.location.href = '/admin'; return; }
+      document.getElementById('userName').textContent = me.name || me.email;
+    } catch (err) {
+      window.location.href = '/login';
+      return;
+    }
+    poll();
+    setInterval(poll, 500);
+  })();
+</script>
+</body>
+</html>
