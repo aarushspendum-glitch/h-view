@@ -39,7 +39,7 @@ module.exports = async (req, res) => {
       const expires = new Date(Date.now() + INVITE_TTL_MS).toISOString();
       userRecord = {
         email,
-        password: null,
+        password: '', // no password yet -- verifyPassword() always rejects this, satisfies NOT NULL constraint
         role,
         name,
         invite_token: token,
