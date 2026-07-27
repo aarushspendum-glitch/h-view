@@ -136,15 +136,12 @@ header.nav {
   background-size: 22px 22px;
   border: 1px solid var(--border-strong);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 20px;
   text-align: center;
   padding: 24px;
 }
 .spec-box .corner { position: absolute; width: 16px; height: 16px; border: 2px solid var(--purple); }
-.spec-illo { width: 62%; max-width: 220px; height: auto; }
 .spec-box .corner.tl { top: -1px; left: -1px; border-right: none; border-bottom: none; }
 .spec-box .corner.tr { top: -1px; right: -1px; border-left: none; border-bottom: none; }
 .spec-box .corner.bl { bottom: -1px; left: -1px; border-right: none; border-top: none; }
