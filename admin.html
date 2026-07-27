@@ -89,6 +89,7 @@
   .form-msg { font-size: 12.5px; margin-top: 10px; display: none; }
   .form-msg.success { color: var(--green); display: block; }
   .form-msg.error { color: var(--red); display: block; }
+  .hint { font-size: 12.5px; color: var(--grey-500); }
   .empty { color: var(--grey-500); font-size: 13.5px; grid-column: 1 / -1; }
 </style>
 </head>
@@ -121,10 +122,10 @@
       <form id="clientForm">
         <div class="field"><label>Name</label><input type="text" id="clientName" required /></div>
         <div class="field"><label>Email</label><input type="email" id="clientEmail" required /></div>
-        <div class="field"><label>Password</label><input type="password" id="clientPassword" required /></div>
         <button type="submit" class="primary">Add client</button>
         <div class="form-msg" id="clientMsg"></div>
       </form>
+      <div class="hint" style="margin-top:10px;">They'll get an email to set their own password.</div>
     </div>
     <div class="panel">
       <h3>Assign device</h3>
@@ -215,14 +216,13 @@
         body: JSON.stringify({
           name: document.getElementById('clientName').value,
           email: document.getElementById('clientEmail').value,
-          password: document.getElementById('clientPassword').value,
           role: 'client',
           secret,
         }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to add client');
-      showMsg(msg, `Client "${data.user.name}" added.`, false);
+      showMsg(msg, `Client "${data.user.name}" added — invite email sent.`, false);
       e.target.reset();
     } catch (err) {
       showMsg(msg, err.message, true);
