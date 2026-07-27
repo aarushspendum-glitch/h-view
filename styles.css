@@ -11,8 +11,8 @@
   --text-faintest: #a49a80;
   --border: #d8d2c2;
   --border-strong: #c9c2ae;
-  --purple: #4b2e6e;
-  --purple-dark: #3a2354;
+  --purple: #6d3fae;
+  --purple-dark: #5a2f96;
   --purple-tint: #f1e9f7;
   --placeholder-bg: #ece8dc;
   --white: #ffffff;
@@ -76,7 +76,8 @@ header.nav {
   gap: 24px;
   padding: 24px 32px;
 }
-.brand { font-family: var(--font-mono); font-size: 18px; font-weight: 600; letter-spacing: 0.04em; color: var(--ink); }
+.brand { display: flex; align-items: center; gap: 9px; font-family: var(--font-mono); font-size: 18px; font-weight: 600; letter-spacing: 0.04em; color: var(--ink); }
+.brand-mark { height: 26px; width: auto; display: block; }
 .brand .dot { color: var(--purple); }
 
 .nav-links { display: flex; align-items: center; gap: 0; }
@@ -135,12 +136,15 @@ header.nav {
   background-size: 22px 22px;
   border: 1px solid var(--border-strong);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 20px;
   text-align: center;
   padding: 24px;
 }
 .spec-box .corner { position: absolute; width: 16px; height: 16px; border: 2px solid var(--purple); }
+.spec-illo { width: 62%; max-width: 220px; height: auto; }
 .spec-box .corner.tl { top: -1px; left: -1px; border-right: none; border-bottom: none; }
 .spec-box .corner.tr { top: -1px; right: -1px; border-left: none; border-bottom: none; }
 .spec-box .corner.bl { bottom: -1px; left: -1px; border-right: none; border-top: none; }
@@ -281,8 +285,9 @@ footer .container {
   display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 24px;
   padding: 40px 32px;
 }
-.footer-brand { font-family: var(--font-mono); font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+.footer-brand { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
 .footer-brand .dot { color: var(--purple); }
+.footer-brand .brand-mark { height: 20px; }
 footer .tagline { font-size: 12px; color: var(--text-faint); }
 footer .est-line { font-family: var(--font-mono); font-size: 11px; color: var(--text-faintest); margin-top: 6px; }
 footer .footer-links { display: flex; flex-wrap: wrap; }
