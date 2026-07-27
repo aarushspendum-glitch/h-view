@@ -51,13 +51,41 @@
       </div>
 
       <div class="hero-right">
-        <div class="spec-box hero-visual">
-          <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
-          <span class="fig-label">FIG. 01 &#8212; SENSOR MOUNTED ON ROOFTOP RTU</span>
-        </div>
-        <div class="hero-readout">
-          <span>UNIT_02 / NORTH_ROOF &#8901; CALIBRATED 24H</span>
-          <span class="status">READING: NORMAL</span>
+        <div class="dash-card">
+          <div class="dash-topbar">
+            <span class="title">H-VIEW Dashboard</span>
+            <span class="dash-status"><span class="dot-pulse"></span> Live</span>
+          </div>
+          <div class="dash-body">
+            <div class="dash-unit-label">Monitoring</div>
+            <div class="dash-unit-name">Rooftop RTU &#8212; Unit 2, North Roof</div>
+
+            <div class="wave-wrap">
+              <svg viewBox="0 0 400 84" preserveAspectRatio="none">
+                <path id="wavePath" d="M0,42 Q20,20 40,42 T80,42 T120,42 T160,42 T200,42 T240,42 T280,42 T320,42 T360,42 T400,42" fill="none" stroke="#6d3fae" stroke-width="2"/>
+              </svg>
+            </div>
+
+            <div class="stat-row">
+              <div class="stat-box">
+                <div class="label">Vibration</div>
+                <div class="value" id="statVib">0.04 <span>g</span></div>
+              </div>
+              <div class="stat-box">
+                <div class="label">Baseline</div>
+                <div class="value" id="statBaseline">Active</div>
+              </div>
+              <div class="stat-box">
+                <div class="label">Status</div>
+                <div class="value" id="statStatus" style="color:#6d3fae;">Normal</div>
+              </div>
+            </div>
+
+            <div class="dash-footline">
+              <span>Calibrated over 24 hrs</span>
+              <span>Updated just now</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -111,9 +139,21 @@
         </div>
       </div>
       <div class="split-right">
-        <div class="spec-box">
-          <span class="corner tl"></span><span class="corner br"></span>
-          <span class="fig-label">FIG. 02 &#8212; ROOFTOP RTUS, CLIENT SITE</span>
+        <div class="rtu-visual">
+          <svg width="280" height="240" viewBox="0 0 280 240" fill="none">
+            <rect x="30" y="70" width="220" height="110" rx="10" fill="#27272a" stroke="#3f3f46" stroke-width="2"/>
+            <rect x="50" y="90" width="60" height="60" rx="6" fill="#18181b" stroke="#52525b"/>
+            <rect x="130" y="90" width="60" height="60" rx="6" fill="#18181b" stroke="#52525b"/>
+            <circle cx="80" cy="120" r="18" fill="none" stroke="#6d3fae" stroke-width="2"/>
+            <circle cx="160" cy="120" r="18" fill="none" stroke="#6d3fae" stroke-width="2" opacity="0.5"/>
+            <rect x="205" y="95" width="30" height="26" rx="4" fill="#5a2f96"/>
+            <circle cx="220" cy="90" r="4" fill="#6d3fae">
+              <animate attributeName="opacity" values="1;0.3;1" dur="1.6s" repeatCount="indefinite"/>
+            </circle>
+            <path d="M30 70 L60 40 L250 40 L250 70" fill="none" stroke="#3f3f46" stroke-width="2"/>
+            <line x1="220" y1="121" x2="220" y2="145" stroke="#6d3fae" stroke-width="1.5" stroke-dasharray="3 3"/>
+            <path d="M195 150 q10 -18 20 0 t20 0" stroke="#6d3fae" stroke-width="2" fill="none" opacity="0.8"/>
+          </svg>
         </div>
       </div>
     </div>
@@ -168,6 +208,7 @@
         <div class="team-cell">
           <div class="avatar-box">VC</div>
           <h3>Vihan Chirumamilla</h3>
+          <p class="team-role-tag co-founder">CO&#8209;FOUNDER</p>
           <p class="title">CMO &amp; CFO</p>
         </div>
       </div>
