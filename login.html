@@ -6,31 +6,34 @@
 <title>Sign in — H-VIEW</title>
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
 <meta name="apple-mobile-web-app-title" content="H-VIEW" />
-<meta name="theme-color" content="#f6f3ed" />
+<meta name="theme-color" content="#f5f3ed" />
 <link rel="icon" type="image/png" href="/assets/favicon.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
     --white: #ffffff;
-    --cream: #f6f3ed;
-    --grey-200: #e4e4e7;
-    --grey-300: #d4d4d8;
-    --grey-500: #7c7488;
-    --grey-700: #453d56;
-    --grey-900: #241c3f;
-    --blue: #6a63e0;
-    --blue-dark: #554cc9;
-    --blue-tint: #ecebfc;
+    --bg: #f5f3ed;
+    --ink: #16140f;
+    --text: #514a3b;
+    --text-muted: #6b6350;
+    --text-faint: #8c8266;
+    --border: #d8d2c2;
+    --border-strong: #c9c2ae;
+    --purple: #6d3fae;
+    --purple-dark: #5a2f96;
+    --purple-tint: #f1e9f7;
     --red: #c81e1e;
     --red-tint: #fdecec;
+    --font-sans: "IBM Plex Sans", sans-serif;
+    --font-mono: "IBM Plex Mono", monospace;
   }
   body {
-    font-family: "Inter", sans-serif;
-    background: var(--cream);
-    color: var(--grey-700);
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -39,54 +42,54 @@
   }
   .card {
     background: var(--white);
-    border: 1px solid var(--grey-200);
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(24,24,27,0.05), 0 16px 40px rgba(24,24,27,0.08);
+    border: 1px solid var(--border-strong);
+    box-shadow: 0 4px 12px rgba(22,20,15,0.04), 0 16px 32px rgba(22,20,15,0.06);
     padding: 40px;
     width: 100%;
     max-width: 400px;
   }
   .brand { display: flex; align-items: center; margin-bottom: 6px; }
-  .tagline { font-size: 13.5px; color: var(--grey-500); margin-bottom: 32px; }
-  label { display: block; font-size: 13px; font-weight: 600; color: var(--grey-700); margin-bottom: 6px; }
+  .tagline { font-family: var(--font-mono); font-size: 12px; color: var(--text-faint); margin-bottom: 32px; letter-spacing: 0.02em; }
+  label { display: block; font-family: var(--font-mono); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; color: var(--text-muted); margin-bottom: 7px; }
   .field { margin-bottom: 18px; }
   input {
     width: 100%;
     padding: 11px 13px;
-    border: 1px solid var(--grey-300);
-    border-radius: 8px;
-    font-size: 14.5px;
-    font-family: inherit;
-    color: var(--grey-900);
+    border: 1px solid var(--border-strong);
+    font-size: 14px;
+    font-family: var(--font-mono);
+    color: var(--ink);
+    background: var(--white);
   }
-  input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(106,99,224,0.15); }
+  input:focus { outline: none; border-color: var(--purple); box-shadow: 0 0 0 3px rgba(109,63,174,0.15); }
   button {
     width: 100%;
-    padding: 12px;
+    padding: 13px;
     border: none;
-    border-radius: 8px;
-    background: var(--blue);
+    background: var(--purple);
     color: white;
     font-weight: 600;
-    font-size: 15px;
+    font-size: 13px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
     cursor: pointer;
-    font-family: inherit;
     margin-top: 6px;
   }
-  button:hover { background: var(--blue-dark); }
+  button:hover { background: var(--purple-dark); }
   button:disabled { opacity: 0.6; cursor: default; }
   .error {
     display: none;
     background: var(--red-tint);
     color: var(--red);
-    font-size: 13.5px;
+    font-size: 13px;
     font-weight: 500;
     padding: 10px 12px;
-    border-radius: 8px;
     margin-bottom: 18px;
+    border: 1px solid var(--red);
   }
   .error.show { display: block; }
-  footer { text-align: center; font-size: 12.5px; color: var(--grey-500); margin-top: 24px; }
+  footer { text-align: center; font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); margin-top: 24px; letter-spacing: 0.02em; }
 </style>
 </head>
 <body>
@@ -96,7 +99,7 @@
     <div class="brand">
       <img src="assets/logo-lockup.png" alt="H-VIEW" style="height:34px; width:auto;" />
     </div>
-    <div class="tagline">Device health monitoring platform</div>
+    <div class="tagline">DEVICE HEALTH MONITORING PLATFORM</div>
 
     <div class="error" id="error"></div>
 
@@ -109,10 +112,10 @@
         <label for="password">Password</label>
         <input type="password" id="password" name="password" required autocomplete="current-password" />
       </div>
-      <button type="submit" id="submitBtn">Sign in</button>
+      <button type="submit" id="submitBtn">Sign in &#8594;</button>
     </form>
   </div>
-  <footer>H-VIEW &middot; Predictive Maintenance</footer>
+  <footer>H-VIEW &middot; PREDICTIVE MAINTENANCE</footer>
 </div>
 
 <script>
@@ -153,7 +156,7 @@
       errorBox.textContent = err.message;
       errorBox.classList.add('show');
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Sign in';
+      submitBtn.textContent = 'Sign in →';
     }
   });
 </script>
