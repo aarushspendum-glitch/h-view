@@ -8,24 +8,22 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
 <meta name="apple-mobile-web-app-title" content="H-VIEW" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="theme-color" content="#f6f3ed" />
+<meta name="theme-color" content="#f5f3ed" />
 <link rel="icon" type="image/png" href="/assets/favicon.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
 <header class="nav">
   <div class="container nav-inner">
-    <a href="#top" class="brand">
-      <img src="assets/logo-lockup.png" alt="H-VIEW" class="brand-logo" />
-    </a>
+    <a href="#top" class="brand">H&#8209;VIEW<span class="dot">.</span></a>
     <nav class="nav-links" id="navLinks">
       <a href="#how-it-works">How It Works</a>
       <a href="#rtus">Built For</a>
-      <a href="#pilot">Pilot Program</a>
+      <a href="#pilot">Pilot</a>
       <a href="#about">About</a>
       <a href="/login" title="For registered H-VIEW customers">Client Login</a>
       <a href="#request" class="btn btn-primary">Request Access</a>
@@ -41,57 +39,25 @@
   <!-- HERO -->
   <section class="hero">
     <div class="container hero-grid">
-      <div>
-        <span class="eyebrow">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          Now piloting with select small businesses
-        </span>
-        <h1>Know your HVAC is failing <span class="accent">before it fails.</span></h1>
-        <p class="lead">H-VIEW is a stick-on sensor that watches your rooftop unit's vibration, acceleration, and gyro signature around the clock — and shows it to you live, on a website, from anywhere.</p>
+      <div class="hero-left">
+        <span class="eyebrow status"><span class="dot"></span>STATUS: PILOTING WITH SELECT BUSINESSES</span>
+        <h1>Know your HVAC is failing before it fails.</h1>
+        <p class="lead">A stick&#8209;on sensor that watches your rooftop unit's vibration, acceleration, and gyro signature around the clock &#8212; and shows it to you live, from anywhere.</p>
         <div class="hero-actions">
-          <a href="#request" class="btn btn-primary">Request a Free Pilot</a>
+          <a href="#request" class="btn btn-primary">Request a Free Pilot &#8594;</a>
           <a href="#how-it-works" class="btn btn-ghost">See How It Works</a>
         </div>
-        <div class="hero-note">
-          <span class="dot-pulse"></span>
-          Non-intrusive install &middot; no purchase required &middot; free during the pilot
-        </div>
+        <p class="hero-note">NON&#8209;INTRUSIVE INSTALL &#8901; NO PURCHASE REQUIRED &#8901; FREE DURING PILOT</p>
       </div>
 
-      <div class="dash-card">
-        <div class="dash-topbar">
-          <span class="title">H-VIEW Dashboard</span>
-          <span class="dash-status"><span class="dot-pulse"></span> Live</span>
+      <div class="hero-right">
+        <div class="spec-box hero-visual">
+          <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+          <span class="fig-label">FIG. 01 &#8212; SENSOR MOUNTED ON ROOFTOP RTU</span>
         </div>
-        <div class="dash-body">
-          <div class="dash-unit-label">Monitoring</div>
-          <div class="dash-unit-name">Rooftop RTU — Unit 2, North Roof</div>
-
-          <div class="wave-wrap">
-            <svg viewBox="0 0 400 84" preserveAspectRatio="none">
-              <path id="wavePath" d="M0,42 Q20,20 40,42 T80,42 T120,42 T160,42 T200,42 T240,42 T280,42 T320,42 T360,42 T400,42" fill="none" stroke="#6a63e0" stroke-width="2"/>
-            </svg>
-          </div>
-
-          <div class="stat-row">
-            <div class="stat-box">
-              <div class="label">Vibration</div>
-              <div class="value" id="statVib">0.04 <span>g</span></div>
-            </div>
-            <div class="stat-box">
-              <div class="label">Baseline</div>
-              <div class="value" id="statBaseline">Active</div>
-            </div>
-            <div class="stat-box">
-              <div class="label">Status</div>
-              <div class="value" id="statStatus" style="color:#554cc9;">Normal</div>
-            </div>
-          </div>
-
-          <div class="dash-footline">
-            <span>Calibrated over 24 hrs</span>
-            <span class="mono">Updated just now</span>
-          </div>
+        <div class="hero-readout">
+          <span>UNIT_02 / NORTH_ROOF &#8901; CALIBRATED 24H</span>
+          <span class="status">READING: NORMAL</span>
         </div>
       </div>
     </div>
@@ -100,115 +66,87 @@
   <!-- HOW IT WORKS -->
   <section id="how-it-works">
     <div class="container">
-      <div class="section-head center">
-        <span class="eyebrow">How It Works</span>
+      <div class="section-head-row">
         <h2>Four steps from install to insight.</h2>
-        <p>No wiring, no downtime, no guesswork — just a sensor that learns your equipment and tells you when something changes.</p>
+        <span class="eyebrow">SEC. 01 / HOW IT WORKS</span>
       </div>
 
       <div class="steps">
         <div class="step-card">
-          <div class="step-num">01</div>
-          <h3>Stick-on install</h3>
-          <p>We mount a small sensor box directly onto your HVAC unit. Nothing to bolt, cut, or rewire — done in minutes, with zero downtime.</p>
+          <div class="step-num">STEP&#8201;/&#8201;01</div>
+          <h3>Stick&#8209;on install</h3>
+          <p>We mount a small sensor box directly on your unit. Nothing bolted, cut, or rewired &#8212; done in minutes, no downtime.</p>
         </div>
         <div class="step-card">
-          <div class="step-num">02</div>
+          <div class="step-num">STEP&#8201;/&#8201;02</div>
           <h3>Connects over WiFi</h3>
-          <p>An onboard ESP32 with an accelerometer and gyroscope streams real vibration and motion data live over your WiFi network.</p>
+          <p>An onboard ESP32 with an accelerometer and gyroscope streams real vibration and motion data over your network.</p>
         </div>
         <div class="step-card">
-          <div class="step-num">03</div>
+          <div class="step-num">STEP&#8201;/&#8201;03</div>
           <h3>Learns your baseline</h3>
-          <p>For the first 24 hours, H-VIEW quietly calibrates — learning what "idle" and "active" normally look like for your specific unit.</p>
+          <p>For the first 24 hours, H&#8209;VIEW quietly calibrates &#8212; learning what idle and active look like for your unit.</p>
         </div>
         <div class="step-card">
-          <div class="step-num">04</div>
+          <div class="step-num">STEP&#8201;/&#8201;04</div>
           <h3>Live on your dashboard</h3>
-          <p>From then on, you get real-time readings and a clear signal the moment vibration drifts away from your unit's normal baseline.</p>
+          <p>From there, real&#8209;time readings and a clear signal the moment vibration drifts from normal.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- BUILT FOR RTUs -->
-  <section id="rtus" class="alt">
+  <!-- BUILT FOR -->
+  <section id="rtus">
     <div class="container split">
-      <div>
-        <span class="eyebrow">Built For</span>
-        <h2 style="font-size:clamp(28px,3.4vw,38px); margin-bottom:14px;">Designed around rooftop RTUs — adaptable to almost anything else.</h2>
-        <p style="color:var(--grey-500); font-size:17px;">Rooftop units are our main focus: exposed, hard to keep an eye on, and expensive to let fail quietly. But H-VIEW's sensor and calibration are built to be configured per install, so we tune the setup to whatever HVAC system your business actually runs.</p>
-        <div class="tag-list">
-          <span class="tag primary">Rooftop RTUs (primary focus)</span>
-          <span class="tag">Package units</span>
-          <span class="tag">Split systems</span>
-          <span class="tag">Custom setups on request</span>
+      <div class="split-left">
+        <span class="eyebrow">SEC. 02 / BUILT FOR</span>
+        <h2>Designed around rooftop RTUs.</h2>
+        <p>Rooftop units are our main focus: exposed, hard to keep an eye on, and expensive to let fail quietly. The sensor and calibration are configured per install, so we tune the setup to whatever system your business runs.</p>
+        <div>
+          <div class="spec-row"><span class="label">ROOFTOP RTUS</span><span class="value primary">PRIMARY</span></div>
+          <div class="spec-row"><span class="label">PACKAGE UNITS</span><span class="value">CONFIGURABLE</span></div>
+          <div class="spec-row"><span class="label">SPLIT SYSTEMS</span><span class="value">CONFIGURABLE</span></div>
+          <div class="spec-row"><span class="label">CUSTOM SETUPS</span><span class="value">ON REQUEST</span></div>
         </div>
       </div>
-      <div class="rtu-visual">
-        <svg width="280" height="240" viewBox="0 0 280 240" fill="none">
-          <rect x="30" y="70" width="220" height="110" rx="10" fill="#27272a" stroke="#3f3f46" stroke-width="2"/>
-          <rect x="50" y="90" width="60" height="60" rx="6" fill="#18181b" stroke="#52525b"/>
-          <rect x="130" y="90" width="60" height="60" rx="6" fill="#18181b" stroke="#52525b"/>
-          <circle cx="80" cy="120" r="18" fill="none" stroke="#6a63e0" stroke-width="2"/>
-          <circle cx="160" cy="120" r="18" fill="none" stroke="#6a63e0" stroke-width="2" opacity="0.5"/>
-          <rect x="205" y="95" width="30" height="26" rx="4" fill="#554cc9"/>
-          <circle cx="220" cy="90" r="4" fill="#6a63e0">
-            <animate attributeName="opacity" values="1;0.3;1" dur="1.6s" repeatCount="indefinite"/>
-          </circle>
-          <path d="M30 70 L60 40 L250 40 L250 70" fill="none" stroke="#3f3f46" stroke-width="2"/>
-          <line x1="220" y1="121" x2="220" y2="145" stroke="#6a63e0" stroke-width="1.5" stroke-dasharray="3 3"/>
-          <path d="M195 150 q10 -18 20 0 t20 0" stroke="#6a63e0" stroke-width="2" fill="none" opacity="0.8"/>
-        </svg>
+      <div class="split-right">
+        <div class="spec-box">
+          <span class="corner tl"></span><span class="corner br"></span>
+          <span class="fig-label">FIG. 02 &#8212; ROOFTOP RTUS, CLIENT SITE</span>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- PILOT PROGRAM -->
+  <!-- PILOT -->
   <section id="pilot">
     <div class="container">
-      <div class="pilot-wrap">
-        <div>
-          <span class="eyebrow">Pilot Program</span>
-          <h2 style="font-size:clamp(28px,3.4vw,36px);">We're still building — so start free.</h2>
-          <p style="color:var(--grey-500); font-size:16.5px; margin-top:12px;">H-VIEW is still in active development. Instead of a price tag, every new client starts with a free pilot: try the device on your actual equipment, with no commitment, while we keep improving it around real installs like yours.</p>
-          <div class="pilot-list">
-            <div class="pilot-item">
-              <span class="check">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              <div>
-                <strong>Free, non-intrusive install</strong>
-                <p>Just a stick-on box — no cutting, wiring, or downtime for your equipment.</p>
-              </div>
-            </div>
-            <div class="pilot-item">
-              <span class="check">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              <div>
-                <strong>Free routine checks &amp; upkeep</strong>
-                <p>We handle maintenance and adjustments on our end at no charge — even after the pilot period ends.</p>
-              </div>
-            </div>
-            <div class="pilot-item">
-              <span class="check">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-              <div>
-                <strong>Tuned to your system</strong>
-                <p>We configure the sensor and calibration around your specific HVAC setup, not a one-size-fits-all product.</p>
-              </div>
-            </div>
-          </div>
-        </div>
+      <span class="eyebrow">SEC. 03 / PILOT PROGRAM</span>
+      <h2>We're still building &#8212; so start free.</h2>
+      <p>H&#8209;VIEW is in active development. Every new client starts with a free pilot: try the device on your actual equipment, no commitment, while we keep improving it around real installs.</p>
 
-        <div class="pilot-card">
-          <div class="eyebrow" style="margin-bottom:10px;">Pilot Pricing</div>
-          <div class="price-tag">Free</div>
-          <div class="price-sub">While we're still developing — no cost to try it, no cost after.</div>
-          <div class="status-line">Currently onboarding a limited number of pilot clients</div>
-          <a href="#request" class="btn btn-primary btn-block">Request a Free Pilot</a>
+      <div class="pilot-grid">
+        <div class="pilot-cell">
+          <div class="num">01</div>
+          <h3>Free, non&#8209;intrusive install</h3>
+          <p>Just a stick&#8209;on box &#8212; no cutting, wiring, or downtime.</p>
+        </div>
+        <div class="pilot-cell">
+          <div class="num">02</div>
+          <h3>Free checks &amp; upkeep</h3>
+          <p>We handle maintenance at no charge, even after the pilot ends.</p>
+        </div>
+        <div class="pilot-cell">
+          <div class="num">03</div>
+          <h3>Tuned to your system</h3>
+          <p>Configured around your specific setup, not one&#8209;size&#8209;fits&#8209;all.</p>
+        </div>
+        <div class="pilot-price">
+          <span class="label">PILOT PRICING</span>
+          <span class="amount">$0</span>
+          <p class="desc">No cost to try it, no cost after &#8212; while we're still developing.</p>
+          <a href="#request" class="btn">REQUEST PILOT &#8594;</a>
         </div>
       </div>
     </div>
@@ -217,99 +155,62 @@
   <!-- ABOUT -->
   <section id="about">
     <div class="container">
-      <div class="section-head center">
-        <span class="eyebrow">About</span>
-        <h2>Who's building this.</h2>
-        <p>H-VIEW is a small team building sensors and software for equipment that usually only gets attention after it breaks.</p>
-      </div>
+      <span class="eyebrow">SEC. 04 / ABOUT</span>
+      <h2>Who's building this.</h2>
 
       <div class="team-grid">
-        <div class="team-card">
-          <div class="avatar avatar-glow">AP</div>
-          <div class="team-name">Aarush Pendum</div>
-          <div class="team-founder">Founder</div>
-          <div class="team-title">CEO, COO &amp; CTO</div>
+        <div class="team-cell">
+          <div class="avatar-box">AP</div>
+          <h3>Aarush Pendum</h3>
+          <p class="team-role-tag">ROLE: FOUNDER</p>
+          <p class="title">CEO, COO &amp; CTO</p>
         </div>
-        <div class="team-card">
-          <div class="avatar">VC</div>
-          <div class="team-name">Vihan Chirumamilla</div>
-          <div class="team-title">CMO &amp; CFO</div>
+        <div class="team-cell">
+          <div class="avatar-box">VC</div>
+          <h3>Vihan Chirumamilla</h3>
+          <p class="title">CMO &amp; CFO</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- REQUEST ACCESS -->
-  <section id="request" class="alt">
-    <div class="container request-wrap">
-      <div class="request-info">
-        <span class="eyebrow">Request Access</span>
+  <!-- REQUEST -->
+  <section id="request">
+    <div class="container request-grid">
+      <div class="request-left">
+        <span class="eyebrow">SEC. 05 / REQUEST ACCESS</span>
         <h2>Tell us about your HVAC setup.</h2>
-        <p>H-VIEW isn't sold off the shelf — every install is configured for the equipment it's watching. Reach out with a few details about your system and we'll get back to you about starting a free pilot.</p>
-
-        <div class="info-line">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 6h16v12H4z" stroke="currentColor" stroke-width="2"/><path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="2"/></svg>
-          <div>
-            <strong>Prefer email?</strong>
-            <span>Reach us directly at <a href="mailto:aarush.pendum@gmail.com" style="color:var(--blue-darker); font-weight:600;">aarush.pendum@gmail.com</a></span>
-          </div>
-        </div>
-        <div class="info-line">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          <div>
-            <strong>What happens next</strong>
-            <span>We'll follow up to learn about your HVAC system and schedule a free, no-obligation install.</span>
-          </div>
-        </div>
+        <p class="desc">H&#8209;VIEW isn't sold off the shelf &#8212; every install is configured for the equipment it's watching. Send a few details and we'll follow up about a free pilot.</p>
+        <p class="info-line"><strong>PREFER EMAIL?</strong> <a href="mailto:aarush.pendum@gmail.com">aarush.pendum@gmail.com</a></p>
+        <p class="info-line"><strong>NEXT STEP</strong> &#8212; we'll follow up to schedule a free, no&#8209;obligation install.</p>
       </div>
 
-      <div>
+      <div class="request-right">
         <form class="request-form" id="requestForm" action="https://formspree.io/f/xnjegzyp" method="POST">
-          <div id="formFields">
+          <div id="formFields" style="display:flex; flex-direction:column; gap:14px;">
             <div class="form-row">
-              <div class="field">
-                <label for="name">Full name</label>
-                <input type="text" id="name" name="name" required />
-              </div>
-              <div class="field">
-                <label for="company">Company</label>
-                <input type="text" id="company" name="company" required />
-              </div>
+              <input type="text" name="name" placeholder="FULL NAME" required />
+              <input type="text" name="company" placeholder="COMPANY" />
             </div>
             <div class="form-row">
-              <div class="field">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required />
-              </div>
-              <div class="field">
-                <label for="phone">Phone (optional)</label>
-                <input type="tel" id="phone" name="phone" />
-              </div>
+              <input type="email" name="email" placeholder="EMAIL" required />
+              <input type="tel" name="phone" placeholder="PHONE (OPTIONAL)" />
             </div>
-            <div class="field">
-              <label for="system">HVAC system type</label>
-              <select id="system" name="system">
-                <option>Rooftop RTU</option>
-                <option>Package unit</option>
-                <option>Split system</option>
-                <option>Not sure / other</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="message">Tell us about your setup</label>
-              <textarea id="message" name="message" placeholder="Number of units, location, anything else worth knowing..."></textarea>
-              <div class="hint">The more we know up front, the faster we can get your pilot configured.</div>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">Request Free Pilot</button>
-            <div class="form-note">No payment, no purchase — this just starts a conversation.</div>
+            <select name="system">
+              <option value="">HVAC SYSTEM TYPE</option>
+              <option>Rooftop RTU</option>
+              <option>Package unit</option>
+              <option>Split system</option>
+              <option>Not sure / other</option>
+            </select>
+            <textarea name="message" rows="4" placeholder="TELL US ABOUT YOUR SETUP"></textarea>
+            <button type="submit" class="btn btn-primary btn-block">REQUEST FREE PILOT &#8594;</button>
+            <p class="form-note">NO PAYMENT, NO PURCHASE &#8212; THIS JUST STARTS A CONVERSATION.</p>
           </div>
 
           <div class="form-success" id="formSuccess">
-            <div class="check-big">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
             <h3>Request received.</h3>
-            <p>Thanks for reaching out — we'll be in touch shortly to talk through your pilot.</p>
+            <p>Thanks for reaching out &#8212; we'll be in touch shortly to talk through your pilot.</p>
           </div>
         </form>
       </div>
@@ -319,23 +220,20 @@
 </main>
 
 <footer>
-  <div class="container footer-inner">
+  <div class="container">
     <div>
-      <div class="footer-brand">
-        <img src="assets/logo-lockup.png" alt="H-VIEW" class="footer-logo" />
-      </div>
-      <div class="tagline">Detecting abnormalities before they become expensive.</div>
-      <div class="est-line">Est. 2026</div>
+      <div class="footer-brand">H&#8209;VIEW<span class="dot">.</span></div>
+      <p class="tagline">DETECTING ABNORMALITIES BEFORE THEY BECOME EXPENSIVE.</p>
+      <p class="est-line">EST. 2026</p>
     </div>
-    <div class="footer-links">
-      <a href="#how-it-works">How It Works</a>
-      <a href="#rtus">Built For</a>
-      <a href="#pilot">Pilot Program</a>
-      <a href="#about">About</a>
-      <a href="/login" title="For registered H-VIEW customers">Client Login</a>
-      <a href="#request">Request Access</a>
-    </div>
-    <div class="copyright">&copy; <span id="year"></span> H-VIEW. All rights reserved.</div>
+    <nav class="footer-links">
+      <a href="#how-it-works">HOW IT WORKS</a>
+      <a href="#rtus">BUILT FOR</a>
+      <a href="#pilot">PILOT</a>
+      <a href="#about">ABOUT</a>
+      <a href="/login" title="For registered H-VIEW customers">CLIENT LOGIN</a>
+    </nav>
+    <p class="copyright">&copy; <span id="year"></span> H&#8209;VIEW. ALL RIGHTS RESERVED.</p>
   </div>
 </footer>
 
