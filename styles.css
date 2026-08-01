@@ -247,7 +247,8 @@ header.nav {
   flex-direction: column;
 }
 .pilot-price .label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; opacity: 0.75; margin-bottom: 10px; }
-.pilot-price .amount { font-family: var(--font-mono); font-size: 36px; font-weight: 600; margin-bottom: 8px; }
+.pilot-price .amount { font-family: var(--font-mono); font-size: 36px; font-weight: 600; }
+.pilot-price .amount-sub { font-family: var(--font-mono); font-size: 12px; opacity: 0.8; display: block; margin-bottom: 8px; }
 .pilot-price p.desc { font-size: 12px; opacity: 0.85; margin-bottom: 20px; }
 .pilot-price .btn { margin-top: auto; text-align: center; color: var(--purple); background: var(--white); border: none; }
 .pilot-price .btn:hover { background: var(--purple-tint); }
