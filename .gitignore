@@ -4,3 +4,5 @@
 .env.local
 node_modules
 *.zip
+.gstack/
+.gstack-review/
