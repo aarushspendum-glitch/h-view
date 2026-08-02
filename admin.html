@@ -47,7 +47,7 @@
 
   main { max-width: 1100px; margin: 0 auto; padding: 32px 24px 64px; }
 
-  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+  .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 32px; }
   .stat-card { background: var(--white); border: 1px solid var(--border-strong); padding: 18px 20px; }
   .stat-label { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-faint); font-weight: 600; margin-bottom: 8px; }
   .stat-value { font-family: var(--font-mono); font-size: 28px; font-weight: 700; }
@@ -55,6 +55,7 @@
   .stat-value.green { color: var(--green); }
   .stat-value.amber { color: var(--amber); }
   .stat-value.red { color: var(--red); }
+  .stat-value.fault { color: var(--purple); }
 
   .section-title { font-family: var(--font-mono); font-size: 14px; font-weight: 700; color: var(--ink); text-transform: uppercase; letter-spacing: 0.02em; margin: 0 0 14px; }
 
@@ -63,11 +64,13 @@
   .device-card.normal { border-left-color: var(--green); }
   .device-card.warning { border-left-color: var(--amber); }
   .device-card.critical { border-left-color: var(--red); }
+  .device-card.fault { border-left-color: var(--purple); }
   .device-id { font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 6px; }
   .device-status { font-family: var(--font-mono); font-size: 20px; font-weight: 700; color: var(--ink); margin-bottom: 14px; }
   .device-status.normal { color: var(--green); }
   .device-status.warning { color: var(--amber); }
   .device-status.critical { color: var(--red); }
+  .device-status.fault { color: var(--purple); }
   .mini-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
   .mini-box { background: var(--bg); border: 1px solid var(--border); padding: 8px 10px; }
   .mini-label { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; color: var(--text-faint); font-weight: 600; margin-bottom: 3px; }
@@ -115,6 +118,7 @@
     <div class="stat-card"><div class="stat-label">Normal</div><div class="stat-value green" id="statNormal">0</div></div>
     <div class="stat-card"><div class="stat-label">Warning</div><div class="stat-value amber" id="statWarning">0</div></div>
     <div class="stat-card"><div class="stat-label">Critical</div><div class="stat-value red" id="statCritical">0</div></div>
+    <div class="stat-card"><div class="stat-label">Sensor fault</div><div class="stat-value fault" id="statFault">0</div></div>
   </div>
 
   <div class="section-title">Devices</div>
@@ -182,6 +186,7 @@
     if (status === 'NORMAL') return 'normal';
     if (status === 'WARNING') return 'warning';
     if (status === 'CRITICAL') return 'critical';
+    if (status === 'SENSOR_FAULT') return 'fault';
     return '';
   }
 
@@ -199,7 +204,7 @@
       lastSuccessAt = Date.now();
       clearStale();
 
-      let normal = 0, warning = 0, critical = 0;
+      let normal = 0, warning = 0, critical = 0, fault = 0;
       deviceGrid.innerHTML = '';
 
       if (deviceIds.length === 0) {
@@ -230,6 +235,7 @@
           if (cls === 'normal') normal++;
           else if (cls === 'warning') warning++;
           else if (cls === 'critical') critical++;
+          else if (cls === 'fault') fault++;
 
           const card = document.createElement('div');
           card.className = `device-card ${cls}`;
@@ -263,6 +269,7 @@
       document.getElementById('statNormal').textContent = normal;
       document.getElementById('statWarning').textContent = warning;
       document.getElementById('statCritical').textContent = critical;
+      document.getElementById('statFault').textContent = fault;
     } catch (err) {
       console.error(err);
       consecutiveFailures += 1;
