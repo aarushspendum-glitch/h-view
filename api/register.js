@@ -2,6 +2,7 @@ const { supabaseRequest } = require('./_utils/supabase');
 const { makePasswordRecord, generateToken, timingSafeEqualStr } = require('./_utils/auth');
 const { sendEmail } = require('./_utils/email');
 const { requireSession } = require('./_utils/session');
+const { isValidEmail } = require('./_utils/validate');
 
 const SITE_URL = 'https://h-view.vercel.app';
 const INVITE_TTL_MS = 48 * 60 * 60 * 1000; // 48 hours
@@ -25,16 +26,20 @@ module.exports = async (req, res) => {
   if (!email || !role || !name) {
     return res.status(400).json({ error: 'email, role, and name are required' });
   }
+  if (!isValidEmail(email)) {
+    return res.status(400).json({ error: 'That email address doesn\'t look valid' });
+  }
   if (role !== 'admin' && role !== 'client') {
     return res.status(400).json({ error: 'role must be "admin" or "client"' });
   }
+  // Same minimum set-password.js already enforces for the invite flow --
+  // the direct-password path (used for admin accounts / curl-based
+  // creation) previously had no length check at all.
+  if (password && password.length < 8) {
+    return res.status(400).json({ error: 'Password must be at least 8 characters' });
+  }
 
   try {
-    const existing = await supabaseRequest(`users?email=eq.${encodeURIComponent(email)}&select=id`);
-    if (existing && existing.length) {
-      return res.status(409).json({ error: 'A user with that email already exists' });
-    }
-
     let userRecord;
     let inviteLink = null;
 
@@ -56,11 +61,24 @@ module.exports = async (req, res) => {
       inviteLink = `${SITE_URL}/set-password?token=${token}`;
     }
 
-    const inserted = await supabaseRequest('users', {
-      method: 'POST',
-      headers: { Prefer: 'return=representation' },
-      body: JSON.stringify(userRecord),
-    });
+    let inserted;
+    try {
+      inserted = await supabaseRequest('users', {
+        method: 'POST',
+        headers: { Prefer: 'return=representation' },
+        body: JSON.stringify(userRecord),
+      });
+    } catch (insertErr) {
+      // Relying on the database's own unique constraint (users_email_unique_idx,
+      // migration 0004) instead of a separate exists-check beforehand -- a
+      // check-then-insert here was a TOCTOU race: two near-simultaneous
+      // requests for the same email could both pass a pre-check before
+      // either insert landed, creating duplicate accounts.
+      if (insertErr.code === '23505') {
+        return res.status(409).json({ error: 'A user with that email already exists' });
+      }
+      throw insertErr;
+    }
     const user = inserted && inserted[0];
 
     if (inviteLink) {

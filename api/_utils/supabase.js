@@ -18,7 +18,18 @@ async function supabaseRequest(path, options = {}) {
 
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`Supabase ${res.status}: ${text}`);
+    const err = new Error(`Supabase ${res.status}: ${text}`);
+    err.status = res.status;
+    // Postgres unique-violation code, surfaced by PostgREST in the response
+    // body -- callers that need to distinguish "duplicate row" from other
+    // failures (e.g. register.js's email-conflict handling) can check this
+    // instead of string-matching the raw error text.
+    try {
+      err.code = JSON.parse(text).code;
+    } catch {
+      // body wasn't JSON -- leave err.code undefined
+    }
+    throw err;
   }
 
   const text = await res.text();
