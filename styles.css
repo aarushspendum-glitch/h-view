@@ -15,6 +15,7 @@ button, input, select, textarea { font: inherit; }
   --purple: #6d3fae;
   --purple-dark: #5a2f96;
   --purple-tint: #f1e9f7;
+  --readout: #b8722a;
   --placeholder-bg: #ece8dc;
   --white: #ffffff;
 
@@ -134,14 +135,15 @@ header.nav {
 .dot-pulse {
   width: 8px; height: 8px; border-radius: 50%;
   background: var(--purple);
-  box-shadow: 0 0 0 0 rgba(109,63,174,0.6);
-  animation: pulse 2s infinite;
+  animation: pulse 1.8s steps(1) infinite;
   flex-shrink: 0;
 }
 @keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(109,63,174,0.5); }
-  70% { box-shadow: 0 0 0 8px rgba(109,63,174,0); }
-  100% { box-shadow: 0 0 0 0 rgba(109,63,174,0); }
+  0%, 55% { opacity: 1; }
+  56%, 100% { opacity: 0.2; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dot-pulse, .wave-sweep { animation: none; }
 }
 .dash-card {
   background: var(--white);
@@ -165,14 +167,17 @@ header.nav {
 .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
 .stat-box { background: var(--placeholder-bg); border: 1px solid var(--border); padding: 12px 14px; }
 .stat-box .label { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }
-.stat-box .value { font-family: var(--font-mono); font-size: 18px; font-weight: 600; color: var(--ink); }
+.stat-box .value { font-family: var(--font-mono); font-size: 18px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
 .stat-box .value span { font-size: 11px; color: var(--text-faint); font-weight: 500; }
+#statVib { color: var(--readout); }
 
 .wave-wrap {
   height: 84px; background: var(--purple-tint); border: 1px solid var(--border);
   position: relative; overflow: hidden; margin-bottom: 16px;
 }
 .wave-wrap svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.wave-sweep { position: absolute; top: 0; bottom: 0; width: 1.5px; background: var(--readout); animation: sweep 3.2s linear infinite; }
+@keyframes sweep { from { left: 0%; } to { left: 100%; } }
 
 .dash-footline {
   display: flex; align-items: center; justify-content: space-between;
