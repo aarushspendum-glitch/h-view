@@ -1,10 +1,17 @@
 const { supabaseRequest } = require('./_utils/supabase');
 const { timingSafeEqualStr, generateDeviceKey, makePasswordRecord } = require('./_utils/auth');
+const { requireSession } = require('./_utils/session');
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const { deviceId, userEmail, secret } = req.body || {};
+
+  // Two factors required: a valid admin session AND the shared secret --
+  // see register.js for the same reasoning (this endpoint can reassign any
+  // device to any account, previously gated only by ADMIN_SECRET alone).
+  const session = await requireSession(req, ['admin']);
+  if (!session) return res.status(401).json({ error: 'Admin login required' });
 
   const expected = process.env.ADMIN_SECRET;
   if (!expected || !timingSafeEqualStr(secret || '', expected)) {

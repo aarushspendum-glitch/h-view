@@ -1,6 +1,7 @@
 const { supabaseRequest } = require('./_utils/supabase');
 const { makePasswordRecord, generateToken, timingSafeEqualStr } = require('./_utils/auth');
 const { sendEmail } = require('./_utils/email');
+const { requireSession } = require('./_utils/session');
 
 const SITE_URL = 'https://h-view.vercel.app';
 const INVITE_TTL_MS = 48 * 60 * 60 * 1000; // 48 hours
@@ -9,6 +10,13 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const { email, password, role, name, secret } = req.body || {};
+
+  // Two factors required, not one: a valid admin session AND the shared
+  // secret. Previously ADMIN_SECRET alone was the only gate on an endpoint
+  // that can create an admin account -- an unrotated or brute-forced secret
+  // was full account-creation access with no session/login required at all.
+  const session = await requireSession(req, ['admin']);
+  if (!session) return res.status(401).json({ error: 'Admin login required' });
 
   const expected = process.env.ADMIN_SECRET;
   if (!expected || !timingSafeEqualStr(secret || '', expected)) {

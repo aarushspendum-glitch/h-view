@@ -1,6 +1,7 @@
 const { supabaseRequest } = require('./_utils/supabase');
 const { verifyPassword, generateToken } = require('./_utils/auth');
 const { setTokenCookie } = require('./_utils/cookies');
+const { sessionExpiresAt } = require('./_utils/session');
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
@@ -30,6 +31,7 @@ module.exports = async (req, res) => {
         email: user.email,
         role: user.role,
         name: user.name,
+        expires_at: sessionExpiresAt(),
       }),
     });
 

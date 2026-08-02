@@ -74,7 +74,7 @@
   .mini-value { font-family: var(--font-mono); font-size: 14px; font-weight: 700; color: var(--ink); }
   .device-time { font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); }
 
-  .forms-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .forms-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
   .panel { background: var(--white); border: 1px solid var(--border-strong); padding: 22px; }
   .panel h3 { font-family: var(--font-mono); font-size: 13px; font-weight: 700; color: var(--ink); text-transform: uppercase; letter-spacing: 0.02em; margin-bottom: 16px; }
   .field { margin-bottom: 14px; }
@@ -139,6 +139,15 @@
         <button type="submit" class="primary">Assign device</button>
         <div class="form-msg" id="assignMsg"></div>
       </form>
+    </div>
+    <div class="panel">
+      <h3>Revoke sessions</h3>
+      <form id="revokeForm">
+        <div class="field"><label>Client email</label><input type="email" id="revokeEmail" required /></div>
+        <button type="submit" class="primary">Revoke all sessions</button>
+        <div class="form-msg" id="revokeMsg"></div>
+      </form>
+      <div class="hint" style="margin-top:10px;">Signs them out everywhere immediately -- use if a device or account might be compromised.</div>
     </div>
   </div>
 </main>
@@ -287,6 +296,29 @@
       } else {
         showMsg(msg, 'Device assigned. (Already provisioned -- existing secret unchanged.)', false);
       }
+      e.target.reset();
+    } catch (err) {
+      showMsg(msg, err.message, true);
+    }
+  });
+
+  document.getElementById('revokeForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById('revokeMsg');
+    const secret = prompt('Admin secret:');
+    if (!secret) return;
+    try {
+      const res = await fetch('/api/revoke-sessions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userEmail: document.getElementById('revokeEmail').value,
+          secret,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to revoke sessions');
+      showMsg(msg, 'All sessions revoked for that account.', false);
       e.target.reset();
     } catch (err) {
       showMsg(msg, err.message, true);

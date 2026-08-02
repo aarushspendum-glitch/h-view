@@ -7,8 +7,15 @@ const SILENCE_THRESHOLD_MS = 2 * 60 * 60 * 1000; // 2 hours
 const REALERT_INTERVAL_MS = 12 * 60 * 60 * 1000; // 12 hours -- don't re-alert on every hourly run
 
 module.exports = async (req, res) => {
+  // Fail closed: if CRON_SECRET isn't configured, reject every request
+  // rather than silently allowing unauthenticated access (including the
+  // force=1 bypass below, which shares this same gate).
   const cronSecret = process.env.CRON_SECRET;
-  if (cronSecret && !timingSafeEqualStr(req.headers['authorization'] || '', `Bearer ${cronSecret}`)) {
+  if (!cronSecret) {
+    console.error('CRON_SECRET not set -- rejecting request rather than allowing unauthenticated access');
+    return res.status(500).json({ error: 'Server misconfigured: CRON_SECRET not set' });
+  }
+  if (!timingSafeEqualStr(req.headers['authorization'] || '', `Bearer ${cronSecret}`)) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
