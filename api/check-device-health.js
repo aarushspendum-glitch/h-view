@@ -28,10 +28,16 @@ module.exports = async (req, res) => {
         `readings?device_id=eq.${encodeURIComponent(device.id)}&select=created_at&order=created_at.desc&limit=1`
       );
       const lastReading = latest && latest[0] ? new Date(latest[0].created_at).getTime() : null;
-      if (lastReading === null) continue; // never reported yet -- likely still being installed/paired
 
-      const silentFor = now - lastReading;
-      if (silentFor < SILENCE_THRESHOLD_MS) continue; // reporting fine
+      // A device with zero readings is either brand new (still pairing) or has
+      // gone silent long enough that even its historical data is gone (e.g. a
+      // demo reset wiped readings while the device stayed assigned). Either way,
+      // if it's been assigned and reporting nothing, that's worth a look -- flag
+      // it too instead of skipping forever, but still respect the re-alert cooldown.
+      if (lastReading !== null) {
+        const silentFor = now - lastReading;
+        if (silentFor < SILENCE_THRESHOLD_MS) continue; // reporting fine
+      }
 
       const lastAlert = device.last_silence_alert_at ? new Date(device.last_silence_alert_at).getTime() : 0;
       if (now - lastAlert < REALERT_INTERVAL_MS) continue; // already alerted recently
@@ -44,14 +50,14 @@ module.exports = async (req, res) => {
     }
 
     const listHtml = silentDevices
-      .map((d) => `<li>${d.name || d.id} — last heard from ${new Date(d.lastReading).toLocaleString()}</li>`)
+      .map((d) => `<li>${d.name || d.id} — ${d.lastReading ? `last heard from ${new Date(d.lastReading).toLocaleString()}` : 'no readings on record at all'}</li>`)
       .join('');
 
     await sendEmail({
       to: adminEmail,
       subject: `H-VIEW: ${silentDevices.length} device(s) gone silent`,
       html: `
-        <p>The following device(s) haven't sent a reading in over 2 hours:</p>
+        <p>The following device(s) haven't sent a reading in over 2 hours (or have never reported any data):</p>
         <ul>${listHtml}</ul>
         <p><a href="${SITE_URL}/admin">View admin dashboard</a></p>
       `,
