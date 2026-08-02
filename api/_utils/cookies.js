@@ -12,7 +12,11 @@ function parseCookies(req) {
 }
 
 function isHttps(req) {
-  return process.env.VERCEL_ENV || req.headers['x-forwarded-proto'] === 'https';
+  // VERCEL_ENV is truthy even under local `vercel dev` over plain HTTP,
+  // which was marking the cookie Secure and breaking local login (browsers
+  // silently drop Secure cookies set over HTTP). x-forwarded-proto reflects
+  // the actual scheme the request arrived over, in dev and in prod alike.
+  return req.headers['x-forwarded-proto'] === 'https';
 }
 
 function setTokenCookie(req, res, token, maxAgeSeconds = 60 * 60 * 24 * 30) {

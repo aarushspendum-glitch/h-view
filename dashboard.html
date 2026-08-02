@@ -90,11 +90,14 @@
   .status-banner.normal { border-left-color: var(--green); }
   .status-banner.warning { border-left-color: var(--amber); }
   .status-banner.critical { border-left-color: var(--red); }
+  .status-banner.stale { border-left-color: var(--text-faint); }
   .status-left { display: flex; align-items: center; gap: 12px; }
   .status-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--border-strong); flex-shrink: 0; }
   .status-dot.normal { background: var(--green); animation: pulse 2s steps(1) infinite; }
   .status-dot.warning { background: var(--amber); animation: pulse 1.2s steps(1) infinite; }
   .status-dot.critical { background: var(--red); animation: pulse 0.6s steps(1) infinite; }
+  .status-dot.stale { background: var(--text-faint); animation: pulse 1s steps(1) infinite; }
+  .last-update.stale { color: var(--amber); font-weight: 600; }
   @keyframes pulse { 0%, 55% { opacity: 1; } 56%, 100% { opacity: 0.2; } }
   .status-text { font-family: var(--font-mono); font-size: 24px; font-weight: 700; color: var(--ink); }
   .status-text.normal { color: var(--green); }
@@ -222,6 +225,26 @@
   const deviceState = new Map(); // deviceId -> { history, lastLoggedStatus, readingCount }
   let selectedDeviceId = null;
   let polling = false;
+  let consecutiveFailures = 0;
+  let lastSuccessAt = null;
+  const STALE_THRESHOLD = 3;
+
+  // A fetch error previously only went to console.error, leaving the UI
+  // showing stale "last known good" status indefinitely during an outage
+  // with no visible indication anything was wrong.
+  function markStale() {
+    statusBanner.classList.add('stale');
+    statusDot.classList.add('stale');
+    lastUpdateEl.classList.add('stale');
+    const secs = lastSuccessAt ? Math.round((Date.now() - lastSuccessAt) / 1000) : null;
+    lastUpdateEl.textContent = secs !== null ? `Stale — last updated ${secs}s ago` : 'Stale — no successful update yet';
+  }
+
+  function clearStale() {
+    statusBanner.classList.remove('stale');
+    statusDot.classList.remove('stale');
+    lastUpdateEl.classList.remove('stale');
+  }
 
   function stateFor(deviceId) {
     if (!deviceState.has(deviceId)) {
@@ -389,8 +412,13 @@
     try {
       const res = await fetch('/api/latest');
       if (res.status === 401) { window.location.href = '/login'; return; }
+      if (!res.ok) throw new Error(`latest returned ${res.status}`);
       const data = await res.json();
       const devices = data.devices || [];
+
+      consecutiveFailures = 0;
+      lastSuccessAt = Date.now();
+      clearStale();
 
       if (devices.length === 0) {
         renderDeviceSelect([]);
@@ -410,6 +438,8 @@
       renderDevice(selected);
     } catch (err) {
       console.error(err);
+      consecutiveFailures += 1;
+      if (consecutiveFailures >= STALE_THRESHOLD) markStale();
     } finally {
       polling = false;
     }
