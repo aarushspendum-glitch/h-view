@@ -4,5 +4,8 @@
     { "source": "/dashboard", "destination": "/dashboard.html" },
     { "source": "/admin", "destination": "/admin.html" },
     { "source": "/set-password", "destination": "/set-password.html" }
+  ],
+  "crons": [
+    { "path": "/api/check-device-health", "schedule": "0 * * * *" }
   ]
 }
