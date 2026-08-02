@@ -246,8 +246,14 @@
     if (empty) empty.remove();
     const item = document.createElement('div');
     item.className = 'log-item';
-    const time = new Date().toLocaleTimeString();
-    item.innerHTML = `<span class="dot ${statusClass(status)}"></span><span>${message}</span><span class="log-time">${time}</span>`;
+    const dot = document.createElement('span');
+    dot.className = `dot ${statusClass(status)}`;
+    const msgEl = document.createElement('span');
+    msgEl.textContent = message;
+    const timeEl = document.createElement('span');
+    timeEl.className = 'log-time';
+    timeEl.textContent = new Date().toLocaleTimeString();
+    item.append(dot, msgEl, timeEl);
     logList.prepend(item);
   }
 

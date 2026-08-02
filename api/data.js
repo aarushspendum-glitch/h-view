@@ -1,14 +1,22 @@
 const { supabaseRequest } = require('./_utils/supabase');
 const { sendEmail } = require('./_utils/email');
+const { verifyPassword } = require('./_utils/auth');
 
 const SITE_URL = 'https://h-view.vercel.app';
 const ALERT_STATUSES = ['WARNING', 'CRITICAL'];
+const VALID_STATUSES = ['NORMAL', 'WARNING', 'CRITICAL', 'SENSOR_FAULT'];
+
+function isFiniteNumber(v) {
+  return typeof v === 'number' && Number.isFinite(v);
+}
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const deviceId = req.headers['x-device-id'];
+  const deviceKey = req.headers['x-device-key'];
   if (!deviceId) return res.status(400).json({ error: 'Missing x-device-id header' });
+  if (!deviceKey) return res.status(401).json({ error: 'Missing x-device-key header' });
 
   const {
     status,
@@ -23,7 +31,25 @@ module.exports = async (req, res) => {
     gyroBaseStd,
   } = req.body || {};
 
+  if (!VALID_STATUSES.includes(status)) {
+    return res.status(400).json({ error: `status must be one of ${VALID_STATUSES.join(', ')}` });
+  }
+  const numericFields = { accel, gyro, temp, accelSigma, gyroSigma, accelBaseMean, accelBaseStd, gyroBaseMean, gyroBaseStd };
+  for (const [key, value] of Object.entries(numericFields)) {
+    if (value !== undefined && value !== null && !isFiniteNumber(value)) {
+      return res.status(400).json({ error: `${key} must be a finite number` });
+    }
+  }
+
   try {
+    const devices = await supabaseRequest(
+      `devices?id=eq.${encodeURIComponent(deviceId)}&select=device_secret_hash`
+    );
+    const device = devices && devices[0];
+    if (!device || !verifyPassword(deviceKey, device.device_secret_hash)) {
+      return res.status(401).json({ error: 'Invalid device credentials' });
+    }
+
     let previousStatus = null;
     if (ALERT_STATUSES.includes(status)) {
       const prev = await supabaseRequest(

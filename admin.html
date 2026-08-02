@@ -169,6 +169,25 @@
       if (deviceIds.length === 0) {
         deviceGrid.innerHTML = '<div class="empty">No devices reporting yet.</div>';
       } else {
+        // Device id/status come straight from device-reported data -- never
+        // trust them as HTML. Every dynamic value below goes in via
+        // textContent, never innerHTML.
+        function safeNum(v, digits) {
+          return typeof v === 'number' && Number.isFinite(v) ? v.toFixed(digits) : '—';
+        }
+        function miniBox(label, value) {
+          const box = document.createElement('div');
+          box.className = 'mini-box';
+          const l = document.createElement('div');
+          l.className = 'mini-label';
+          l.textContent = label;
+          const v = document.createElement('div');
+          v.className = 'mini-value';
+          v.textContent = value;
+          box.append(l, v);
+          return box;
+        }
+
         deviceIds.forEach(id => {
           const r = data[id];
           const cls = statusClass(r.status);
@@ -178,16 +197,28 @@
 
           const card = document.createElement('div');
           card.className = `device-card ${cls}`;
-          card.innerHTML = `
-            <div class="device-id">${id}</div>
-            <div class="device-status ${cls}">${r.status || '—'}</div>
-            <div class="mini-row">
-              <div class="mini-box"><div class="mini-label">Accel</div><div class="mini-value">${r.accel !== undefined ? r.accel.toFixed(2) : '—'}</div></div>
-              <div class="mini-box"><div class="mini-label">Gyro</div><div class="mini-value">${r.gyro !== undefined ? r.gyro.toFixed(2) : '—'}</div></div>
-              <div class="mini-box"><div class="mini-label">Temp</div><div class="mini-value">${r.temp !== undefined ? r.temp.toFixed(1) : '—'}&deg;F</div></div>
-            </div>
-            <div class="device-time">${r.receivedAt ? 'Updated ' + new Date(r.receivedAt).toLocaleTimeString() : ''}</div>
-          `;
+
+          const idEl = document.createElement('div');
+          idEl.className = 'device-id';
+          idEl.textContent = id;
+
+          const statusEl = document.createElement('div');
+          statusEl.className = `device-status ${cls}`;
+          statusEl.textContent = r.status || '—';
+
+          const miniRow = document.createElement('div');
+          miniRow.className = 'mini-row';
+          miniRow.append(
+            miniBox('Accel', safeNum(r.accel, 2)),
+            miniBox('Gyro', safeNum(r.gyro, 2)),
+            miniBox('Temp', safeNum(r.temp, 1) + (safeNum(r.temp, 1) !== '—' ? '°F' : ''))
+          );
+
+          const timeEl = document.createElement('div');
+          timeEl.className = 'device-time';
+          timeEl.textContent = r.receivedAt ? 'Updated ' + new Date(r.receivedAt).toLocaleTimeString() : '';
+
+          card.append(idEl, statusEl, miniRow, timeEl);
           deviceGrid.appendChild(card);
         });
       }
@@ -251,7 +282,11 @@
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to assign device');
-      showMsg(msg, 'Device assigned.', false);
+      if (data.newlyProvisioned && data.deviceSecret) {
+        showMsg(msg, `Device assigned. Device secret (shown once, flash into the device now, it cannot be retrieved again): ${data.deviceSecret}`, false);
+      } else {
+        showMsg(msg, 'Device assigned. (Already provisioned -- existing secret unchanged.)', false);
+      }
       e.target.reset();
     } catch (err) {
       showMsg(msg, err.message, true);

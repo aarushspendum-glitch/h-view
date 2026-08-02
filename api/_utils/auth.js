@@ -24,6 +24,13 @@ function generateToken() {
   return crypto.randomBytes(32).toString('hex');
 }
 
+// Semantically distinct from generateToken() (invite links) even though the
+// underlying randomness is the same shape -- a device's long-lived auth
+// secret is a different concern from a short-lived one-time invite token.
+function generateDeviceKey() {
+  return crypto.randomBytes(32).toString('hex');
+}
+
 function timingSafeEqualStr(a, b) {
   if (typeof a !== 'string' || typeof b !== 'string') return false;
   const bufA = Buffer.from(a);
@@ -32,4 +39,4 @@ function timingSafeEqualStr(a, b) {
   return crypto.timingSafeEqual(bufA, bufB);
 }
 
-module.exports = { makePasswordRecord, verifyPassword, generateToken, timingSafeEqualStr };
+module.exports = { makePasswordRecord, verifyPassword, generateToken, generateDeviceKey, timingSafeEqualStr };

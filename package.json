@@ -3,5 +3,8 @@
   "private": true,
   "engines": {
     "node": ">=18.x"
+  },
+  "scripts": {
+    "test": "node --test test/"
   }
 }
