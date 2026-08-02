@@ -51,8 +51,9 @@ module.exports = async (req, res) => {
         if (silentFor < SILENCE_THRESHOLD_MS) continue; // reporting fine
       }
 
+      const force = req.query && req.query.force === '1';
       const lastAlert = device.last_silence_alert_at ? new Date(device.last_silence_alert_at).getTime() : 0;
-      if (now - lastAlert < REALERT_INTERVAL_MS) continue; // already alerted recently
+      if (!force && now - lastAlert < REALERT_INTERVAL_MS) continue; // already alerted recently
 
       silentDevices.push({ ...device, lastReading });
     }
@@ -65,7 +66,7 @@ module.exports = async (req, res) => {
       .map((d) => `<li>${d.name || d.id} — ${d.lastReading ? `last heard from ${new Date(d.lastReading).toLocaleString()}` : 'no readings on record at all'}</li>`)
       .join('');
 
-    await sendEmail({
+    const emailResult = await sendEmail({
       to: adminEmail,
       subject: `H-VIEW: ${silentDevices.length} device(s) gone silent`,
       html: `
@@ -85,7 +86,7 @@ module.exports = async (req, res) => {
       )
     );
 
-    return res.status(200).json({ success: true, silent: silentDevices.length });
+    return res.status(200).json({ success: true, silent: silentDevices.length, emailResult, sentTo: adminEmail });
   } catch (err) {
     console.error('check-device-health error:', err);
     return res.status(500).json({ error: 'Health check failed' });
