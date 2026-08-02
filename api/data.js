@@ -3,7 +3,7 @@ const { sendEmail } = require('./_utils/email');
 const { verifyPassword } = require('./_utils/auth');
 
 const SITE_URL = 'https://h-view.vercel.app';
-const ALERT_STATUSES = ['WARNING', 'CRITICAL'];
+const ALERT_STATUSES = ['WARNING', 'CRITICAL', 'SENSOR_FAULT'];
 const VALID_STATUSES = ['NORMAL', 'WARNING', 'CRITICAL', 'SENSOR_FAULT'];
 
 function isFiniteNumber(v) {
@@ -73,6 +73,28 @@ module.exports = async (req, res) => {
         accel_base_std: accelBaseStd,
         gyro_base_mean: gyroBaseMean,
         gyro_base_std: gyroBaseStd,
+      }),
+    });
+
+    // Denormalized onto devices so /api/latest can read a single indexed
+    // row per device instead of scanning the last 100 readings globally and
+    // deduping client-side -- that approach silently dropped devices once
+    // fleet-wide reading volume exceeded 100 rows in the recent window.
+    await supabaseRequest(`devices?id=eq.${encodeURIComponent(deviceId)}`, {
+      method: 'PATCH',
+      headers: { Prefer: 'return=minimal' },
+      body: JSON.stringify({
+        last_status: status,
+        last_accel: accel,
+        last_gyro: gyro,
+        last_temp: temp,
+        last_accel_sigma: accelSigma,
+        last_gyro_sigma: gyroSigma,
+        last_accel_base_mean: accelBaseMean,
+        last_accel_base_std: accelBaseStd,
+        last_gyro_base_mean: gyroBaseMean,
+        last_gyro_base_std: gyroBaseStd,
+        last_reading_at: new Date().toISOString(),
       }),
     });
 

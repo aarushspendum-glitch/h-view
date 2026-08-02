@@ -51,6 +51,16 @@
   .brand { display: flex; align-items: center; }
   .nav-right { display: flex; align-items: center; gap: 16px; }
   .user-name { font-family: var(--font-mono); font-size: 13px; font-weight: 600; color: var(--text); }
+  .device-select {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--white);
+    border: 1px solid var(--border-strong);
+    padding: 6px 10px;
+    cursor: pointer;
+  }
   .btn-signout {
     padding: 8px 16px;
     border: 1px solid var(--border-strong);
@@ -136,6 +146,7 @@
 <nav>
   <div class="brand"><img src="assets/logo-lockup.png" alt="H-VIEW" style="height:26px; width:auto; display:block;" /></div>
   <div class="nav-right">
+    <select class="device-select" id="deviceSelect" style="display:none;"></select>
     <span class="user-name" id="userName"></span>
     <button class="btn-signout" id="signOutBtn">Sign out</button>
   </div>
@@ -203,11 +214,21 @@
   const logList = document.getElementById('logList');
   const canvas = document.getElementById('chart');
   const ctx = canvas.getContext('2d');
+  const deviceSelect = document.getElementById('deviceSelect');
 
-  let history = [];
-  let lastLoggedStatus = null;
-  let readingCount = 0;
+  // Per-device chart history, last-logged-status, and reading count -- a
+  // client can now have more than one assigned device, so this state can't
+  // be one set of module-level variables shared across all of them.
+  const deviceState = new Map(); // deviceId -> { history, lastLoggedStatus, readingCount }
+  let selectedDeviceId = null;
   let polling = false;
+
+  function stateFor(deviceId) {
+    if (!deviceState.has(deviceId)) {
+      deviceState.set(deviceId, { history: [], lastLoggedStatus: null, readingCount: 0 });
+    }
+    return deviceState.get(deviceId);
+  }
 
   function statusClass(status) {
     if (status === 'NORMAL') return 'normal';
@@ -216,8 +237,16 @@
     return '';
   }
 
+  // Guards against malformed/non-numeric values reaching .toFixed() -- the
+  // backend now rejects non-finite numbers at write time (data.js), but a
+  // frontend guard is cheap insurance against a bug anywhere else in the
+  // path, or old data from before that validation existed.
+  function isFiniteNumber(v) {
+    return typeof v === 'number' && Number.isFinite(v);
+  }
+
   function fmtSigma(sigma) {
-    if (sigma === null || sigma === undefined || isNaN(sigma)) return '';
+    if (!isFiniteNumber(sigma)) return '';
     return `${sigma.toFixed(1)}σ from baseline`;
   }
 
@@ -228,15 +257,16 @@
     const barEl = document.getElementById(`${prefix}Bar`);
     const cls = statusClass(status);
 
-    valueEl.textContent = (value !== undefined && value !== null) ? value.toFixed(3) : '—';
-    if (baseMean !== undefined && baseMean !== null) {
-      baselineEl.textContent = `Baseline ${baseMean.toFixed(3)} ± ${(baseStd || 0).toFixed(3)} ${fmtSigma(sigma) ? '· ' + fmtSigma(sigma) : ''}`;
+    valueEl.textContent = isFiniteNumber(value) ? value.toFixed(3) : '—';
+    if (isFiniteNumber(baseMean)) {
+      const stdPart = isFiniteNumber(baseStd) ? baseStd.toFixed(3) : '0.000';
+      baselineEl.textContent = `Baseline ${baseMean.toFixed(3)} ± ${stdPart} ${fmtSigma(sigma) ? '· ' + fmtSigma(sigma) : ''}`;
     } else {
       baselineEl.textContent = 'Baseline not calibrated';
     }
     pillEl.textContent = status || '—';
     pillEl.className = `metric-pill ${cls}`;
-    const pct = Math.min(100, Math.abs(sigma || 0) * 25);
+    const pct = Math.min(100, Math.abs(isFiniteNumber(sigma) ? sigma : 0) * 25);
     barEl.style.width = `${pct}%`;
     barEl.className = `progress-fill ${cls}`;
   }
@@ -257,7 +287,7 @@
     logList.prepend(item);
   }
 
-  function drawChart() {
+  function drawChart(history) {
     const w = canvas.width, h = canvas.height;
     ctx.clearRect(0, 0, w, h);
     ctx.strokeStyle = '#f0eef8';
@@ -285,6 +315,74 @@
     drawLine('gyro', '#a370d9');
   }
 
+  function renderDeviceSelect(devices) {
+    if (devices.length <= 1) {
+      deviceSelect.style.display = 'none';
+      return;
+    }
+    deviceSelect.style.display = '';
+    const currentOptionIds = Array.from(deviceSelect.options).map(o => o.value);
+    const deviceIds = devices.map(d => d.id);
+    if (currentOptionIds.join(',') !== deviceIds.join(',')) {
+      deviceSelect.textContent = '';
+      devices.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d.id;
+        opt.textContent = d.deviceName || d.id;
+        deviceSelect.appendChild(opt);
+      });
+    }
+    deviceSelect.value = selectedDeviceId;
+  }
+
+  // Tracks reading count / chart history / status-change logging for one
+  // device. Runs for every device on every poll, regardless of which one is
+  // currently selected -- a status change on a device you're not looking at
+  // right now should still show up in the log, not go unnoticed until you
+  // happen to switch to it.
+  function updateDeviceState(d, multiDevice) {
+    if (!d || !d.status) return;
+    const state = stateFor(d.id);
+    state.readingCount += 1;
+    state.history.push({ accel: d.accel, gyro: d.gyro });
+    if (state.history.length > 80) state.history.shift();
+
+    if (d.status !== state.lastLoggedStatus) {
+      const label = multiDevice ? `${d.deviceName || d.id}: status changed to ${d.status}` : `Status changed to ${d.status}`;
+      logEvent(d.status, label);
+      state.lastLoggedStatus = d.status;
+    }
+  }
+
+  // Pure DOM rendering for whichever device is currently selected -- reads
+  // from state (already updated by updateDeviceState above), doesn't mutate it.
+  function renderDevice(d) {
+    if (!d || !d.status) {
+      statusText.textContent = 'Waiting for data...';
+      statusBanner.className = 'status-banner';
+      statusDot.className = 'status-dot';
+      deviceNameEl.textContent = (d && d.deviceName) || '—';
+      lastUpdateEl.textContent = 'No readings yet';
+      return;
+    }
+
+    const cls = statusClass(d.status);
+    statusText.textContent = d.status;
+    statusText.className = `status-text ${cls}`;
+    statusBanner.className = `status-banner ${cls}`;
+    statusDot.className = `status-dot ${cls}`;
+    deviceNameEl.textContent = d.deviceName || '—';
+    lastUpdateEl.textContent = d.receivedAt ? `Updated ${new Date(d.receivedAt).toLocaleTimeString()}` : 'Just now';
+
+    updateMetricCard('accel', d.accel, d.accelBaseMean, d.accelBaseStd, d.accelSigma, d.status);
+    updateMetricCard('gyro', d.gyro, d.gyroBaseMean, d.gyroBaseStd, d.gyroSigma, d.status);
+    document.getElementById('tempValue').textContent = isFiniteNumber(d.temp) ? d.temp.toFixed(1) : '—';
+
+    const state = stateFor(d.id);
+    document.getElementById('readingCount').textContent = `${state.readingCount} readings this session`;
+    drawChart(state.history);
+  }
+
   async function poll() {
     if (polling) return;
     polling = true;
@@ -292,42 +390,40 @@
       const res = await fetch('/api/latest');
       if (res.status === 401) { window.location.href = '/login'; return; }
       const data = await res.json();
+      const devices = data.devices || [];
 
-      if (data.status === 'WAITING' || !data.status) {
-        statusText.textContent = 'Waiting for data...';
-        statusBanner.className = 'status-banner';
-        statusDot.className = 'status-dot';
-        lastUpdateEl.textContent = 'No readings yet';
-      } else {
-        const cls = statusClass(data.status);
-        statusText.textContent = data.status;
-        statusText.className = `status-text ${cls}`;
-        statusBanner.className = `status-banner ${cls}`;
-        statusDot.className = `status-dot ${cls}`;
-        deviceNameEl.textContent = data.deviceName || '—';
-        lastUpdateEl.textContent = data.receivedAt ? `Updated ${new Date(data.receivedAt).toLocaleTimeString()}` : 'Just now';
-
-        updateMetricCard('accel', data.accel, data.accelBaseMean, data.accelBaseStd, data.accelSigma, data.status);
-        updateMetricCard('gyro', data.gyro, data.gyroBaseMean, data.gyroBaseStd, data.gyroSigma, data.status);
-        document.getElementById('tempValue').textContent = (data.temp !== undefined && data.temp !== null) ? data.temp.toFixed(1) : '—';
-        readingCount += 1;
-        document.getElementById('readingCount').textContent = `${readingCount} readings this session`;
-
-        history.push({ accel: data.accel, gyro: data.gyro });
-        if (history.length > 80) history.shift();
-        drawChart();
-
-        if (data.status !== lastLoggedStatus) {
-          logEvent(data.status, `Status changed to ${data.status}`);
-          lastLoggedStatus = data.status;
-        }
+      if (devices.length === 0) {
+        renderDeviceSelect([]);
+        renderDevice(null);
+        return;
       }
+
+      if (!selectedDeviceId || !devices.some(d => d.id === selectedDeviceId)) {
+        selectedDeviceId = devices[0].id;
+      }
+      renderDeviceSelect(devices);
+
+      const multiDevice = devices.length > 1;
+      devices.forEach(d => updateDeviceState(d, multiDevice));
+
+      const selected = devices.find(d => d.id === selectedDeviceId);
+      renderDevice(selected);
     } catch (err) {
       console.error(err);
     } finally {
       polling = false;
     }
   }
+
+  // The event log stays a single shared list across all devices (each entry
+  // names its device when there's more than one) rather than being wiped
+  // per-device on switch -- simpler, and nothing about "what happened
+  // recently" should disappear just because you're looking at a different
+  // device's chart right now. Only the chart itself is genuinely per-device.
+  deviceSelect.addEventListener('change', () => {
+    selectedDeviceId = deviceSelect.value;
+    drawChart(stateFor(selectedDeviceId).history);
+  });
 
   document.getElementById('clearLogBtn').addEventListener('click', () => {
     logList.innerHTML = '<div class="empty">No events yet.</div>';
