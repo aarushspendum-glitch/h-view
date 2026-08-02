@@ -73,3 +73,4 @@ module.exports = async (req, res) => {
     return res.status(500).json({ error: 'Health check failed' });
   }
 };
+
